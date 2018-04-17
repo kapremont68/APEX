@@ -9,9 +9,18 @@ CREATE OR REPLACE PACKAGE lk_auth AS
     ) RETURN VARCHAR2;
 
     FUNCTION check_guid (
-        p_guid IN VARCHAR2,
-        p_res_text OUT VARCHAR2
+        p_guid       IN VARCHAR2,
+        p_res_text   OUT VARCHAR2
     ) RETURN BOOLEAN;
+
+    FUNCTION get_email_by_guid (
+        p_guid VARCHAR2
+    ) RETURN VARCHAR2;
+
+    PROCEDURE update_password (
+        p_new_password VARCHAR2,
+        p_guid VARCHAR2
+    );
 
 END lk_auth;
 /
@@ -64,10 +73,9 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
             p_email,
             a_new_guid
         );
-        COMMIT;
 
+        COMMIT;
         RETURN a_new_guid;
-        
     EXCEPTION
         WHEN no_data_found THEN
             raise_application_error(-20000,'Пользователь с таким email не найден');
@@ -148,6 +156,47 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
             p_res_text := 'Код подтверждения не найден';
             RETURN false;
     END check_guid;
+----------------------------------------------
+
+    FUNCTION get_email_by_guid (
+        p_guid VARCHAR2
+    ) RETURN VARCHAR2 AS
+        a_email   VARCHAR2(50);
+    BEGIN
+        SELECT
+            email
+        INTO
+            a_email
+        FROM
+            lk_emails_guids
+        WHERE
+            guid = p_guid;
+
+        RETURN a_email;
+    EXCEPTION
+        WHEN no_data_found THEN
+            raise_application_error(-20000,'Пользователь с таким email не найден');
+    END get_email_by_guid;
+------------------------------------------------
+
+    PROCEDURE update_password (
+        p_new_password VARCHAR2,
+        p_guid VARCHAR2
+    ) AS
+        a_email   VARCHAR2(50);
+    BEGIN
+        a_email := get_email_by_guid(p_guid);
+        UPDATE lk_users
+            SET
+                password = apex_util.get_hash(apex_t_varchar2(a_email,p_new_password) )
+        WHERE
+            email = a_email;
+
+        COMMIT;
+--    EXCEPTION
+--        WHEN dup_val_on_index THEN
+--            raise_application_error(-20000,'Такой email уже зарегистрирован');
+    END update_password;
 
 END lk_auth;
 /
