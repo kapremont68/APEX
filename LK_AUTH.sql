@@ -8,10 +8,13 @@ CREATE OR REPLACE PACKAGE lk_auth AS
         p_email VARCHAR2
     ) RETURN VARCHAR2;
 
-    FUNCTION check_guid (
-        p_guid       IN VARCHAR2,
-        p_res_text   OUT VARCHAR2
-    ) RETURN BOOLEAN;
+    FUNCTION check_confirm_guid (
+        p_guid IN VARCHAR2
+    ) RETURN CHAR;
+
+    FUNCTION check_reset_guid (
+        p_guid IN VARCHAR2
+    ) RETURN CHAR;
 
     FUNCTION get_email_by_guid (
         p_guid VARCHAR2
@@ -22,6 +25,19 @@ CREATE OR REPLACE PACKAGE lk_auth AS
         p_guid VARCHAR2
     );
 
+    FUNCTION lk_authentication (
+        p_username   IN VARCHAR2,
+        p_password   IN VARCHAR2
+    ) RETURN BOOLEAN;
+
+    FUNCTION user_is_valid (
+        p_email VARCHAR2
+    ) RETURN BOOLEAN;
+
+    FUNCTION get_hash (
+        p_password VARCHAR2
+    ) RETURN VARCHAR2;
+
 END lk_auth;
 /
 
@@ -29,21 +45,18 @@ END lk_auth;
 CREATE OR REPLACE PACKAGE BODY lk_auth AS
 
 ---------------------------------------------------
-
     PROCEDURE add_new_user (
         p_email      IN VARCHAR2,
         p_password   IN VARCHAR2
-    )
-        AS
+    ) AS
     BEGIN
         INSERT INTO lk_users (
             email,
             password
         ) VALUES (
             p_email,
-            apex_util.get_hash(apex_t_varchar2(p_email,p_password) )
+            get_hash(p_password)
         );
-
         COMMIT;
     EXCEPTION
         WHEN dup_val_on_index THEN
@@ -82,80 +95,46 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
     END add_email_guid;
 ---------------------------------------------------
 
-    FUNCTION check_guid (
-        p_guid       IN VARCHAR2,
-        p_res_text   OUT VARCHAR2
-    ) RETURN BOOLEAN AS
-        rec           lk_emails_guids%rowtype;
-        email_valid   CHAR(1);
+    FUNCTION check_confirm_guid (
+        p_guid IN VARCHAR2
+    ) RETURN CHAR AS
+        a_email   VARCHAR2(50);
     BEGIN
-        SELECT
-            *
-        INTO
-            rec
-        FROM
-            lk_emails_guids
-        WHERE
-            guid = p_guid;
-
+        a_email := get_email_by_guid(p_guid);
         IF
-            rec.id IS NOT NULL
+            ( a_email IS NOT NULL ) AND ( NOT user_is_valid(a_email) )
         THEN
-            SELECT
-                valid
-            INTO
-                email_valid
-            FROM
-                lk_users
-            WHERE
-                email = rec.email;
-
-            IF
-                email_valid = 'Y'
-            THEN
-                p_res_text := 'Адрес '
-                || rec.email
-                || ' уже был подтвержден ранее';
-                RETURN false;
-            END IF;
-
-            IF
-                rec.used = 'Y'
-            THEN
-                p_res_text := 'Код подтверждения уже использовался ранее';
-                RETURN false;
-            END IF;
-            IF
-                rec.row_time + 3 < SYSDATE ()
-            THEN
-                p_res_text := 'Код подтверждения просрочен (прошло более 3 дней)';
-                RETURN false;
-            END IF;
-
             UPDATE lk_emails_guids
                 SET
                     used = 'Y'
             WHERE
-                id = rec.id;
+                guid = p_guid;
 
             UPDATE lk_users
                 SET
                     valid = 'Y'
             WHERE
-                email = rec.email;
+                email = a_email;
 
             COMMIT;
+            RETURN 'Y';
         END IF;
 
-        p_res_text := 'Адрес '
-        || rec.email
-        || ' успешно подтвержден';
-        RETURN true;
-    EXCEPTION
-        WHEN no_data_found THEN
-            p_res_text := 'Код подтверждения не найден';
-            RETURN false;
-    END check_guid;
+        RETURN 'N';
+    END check_confirm_guid;
+----------------------------------------------
+
+    FUNCTION check_reset_guid (
+        p_guid IN VARCHAR2
+    ) RETURN CHAR
+        AS
+    BEGIN
+        RETURN
+            CASE
+                WHEN get_email_by_guid(p_guid) IS NULL THEN 'N'
+                ELSE 'Y'
+            END;
+    END check_reset_guid;
 ----------------------------------------------
 
     FUNCTION get_email_by_guid (
@@ -164,18 +143,19 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
         a_email   VARCHAR2(50);
     BEGIN
         SELECT
-            email
+            lower(TRIM(email) )
         INTO
             a_email
         FROM
             lk_emails_guids
         WHERE
-            guid = p_guid;
+            guid = p_guid
+            AND   used IS NULL;
 
         RETURN a_email;
     EXCEPTION
         WHEN no_data_found THEN
-            raise_application_error(-20000,'Пользователь с таким email не найден');
+            RETURN NULL;
     END get_email_by_guid;
 ------------------------------------------------
 
@@ -186,17 +166,83 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
         a_email   VARCHAR2(50);
     BEGIN
         a_email := get_email_by_guid(p_guid);
+        IF
+            a_email IS NULL
+        THEN
+            raise_application_error(-20000,'Ссылка для смены пароля уже использована ранее или содержит ошибку.');
+        END IF;
         UPDATE lk_users
             SET
-                password = apex_util.get_hash(apex_t_varchar2(a_email,p_new_password) )
+                password = get_hash(p_new_password),
+                valid = 'Y'
         WHERE
             email = a_email;
 
+        UPDATE lk_emails_guids
+            SET
+                used = 'Y'
+        WHERE
+            guid = p_guid;
+
         COMMIT;
---    EXCEPTION
---        WHEN dup_val_on_index THEN
---            raise_application_error(-20000,'Такой email уже зарегистрирован');
     END update_password;
+----------------------------------------------------------
+
+    FUNCTION lk_authentication (
+        p_username   IN VARCHAR2,
+        p_password   IN VARCHAR2
+    ) RETURN BOOLEAN AS
+        rec    lk_users%rowtype;
+    BEGIN
+        SELECT
+            *
+        INTO
+            rec
+        FROM
+            lk_users
+        WHERE
+            email = lower(TRIM(p_username));
+
+        if rec.valid is null then
+            raise_application_error(-20000,'Сперва необходимо подтвердить регистрацию. Проверьте почту.');    
+        end if;
+
+        RETURN rec.password = get_hash(p_password);
+    EXCEPTION
+        WHEN no_data_found THEN
+            RETURN false;
+    END lk_authentication;
+-------------------------------------------------------------
+
+    FUNCTION user_is_valid (
+        p_email VARCHAR2
+    ) RETURN BOOLEAN AS
+        a_valid   CHAR;
+    BEGIN
+        SELECT
+            valid
+        INTO
+            a_valid
+        FROM
+            lk_users
+        WHERE
+            email = p_email
+            AND   valid IS NOT NULL;
+
+        RETURN true;
+    EXCEPTION
+        WHEN no_data_found THEN
+            RETURN false;
+    END user_is_valid;
+
+    FUNCTION get_hash (
+        p_password VARCHAR2
+    ) RETURN VARCHAR2
+        AS
+    BEGIN
+        RETURN apex_util.get_hash(apex_t_varchar2(p_password) );
+
+    END get_hash;
 
 END lk_auth;
 /
