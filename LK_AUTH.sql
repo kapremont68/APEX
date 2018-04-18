@@ -35,6 +35,7 @@ CREATE OR REPLACE PACKAGE lk_auth AS
     ) RETURN BOOLEAN;
 
     FUNCTION get_hash (
+        p_email VARCHAR2,
         p_password VARCHAR2
     ) RETURN VARCHAR2;
 
@@ -45,18 +46,21 @@ END lk_auth;
 CREATE OR REPLACE PACKAGE BODY lk_auth AS
 
 ---------------------------------------------------
+
     PROCEDURE add_new_user (
         p_email      IN VARCHAR2,
         p_password   IN VARCHAR2
-    ) AS
+    )
+        AS
     BEGIN
         INSERT INTO lk_users (
             email,
             password
         ) VALUES (
             p_email,
-            get_hash(p_password)
+            get_hash(p_email, p_password)
         );
+
         COMMIT;
     EXCEPTION
         WHEN dup_val_on_index THEN
@@ -173,7 +177,7 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
         END IF;
         UPDATE lk_users
             SET
-                password = get_hash(p_new_password),
+                password = get_hash(a_email, p_new_password),
                 valid = 'Y'
         WHERE
             email = a_email;
@@ -192,7 +196,7 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
         p_username   IN VARCHAR2,
         p_password   IN VARCHAR2
     ) RETURN BOOLEAN AS
-        rec    lk_users%rowtype;
+        rec   lk_users%rowtype;
     BEGIN
         SELECT
             *
@@ -201,13 +205,14 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
         FROM
             lk_users
         WHERE
-            email = lower(TRIM(p_username));
+            email = lower(TRIM(p_username) );
 
-        if rec.valid is null then
-            raise_application_error(-20000,'Сперва необходимо подтвердить регистрацию. Проверьте почту.');    
-        end if;
-
-        RETURN rec.password = get_hash(p_password);
+        IF
+            rec.valid IS NULL
+        THEN
+            raise_application_error(-20000,'Сперва необходимо подтвердить регистрацию. Проверьте почту.');
+        END IF;
+        RETURN rec.password = get_hash(p_username, p_password);
     EXCEPTION
         WHEN no_data_found THEN
             RETURN false;
@@ -236,12 +241,12 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
     END user_is_valid;
 
     FUNCTION get_hash (
+        p_email VARCHAR2,
         p_password VARCHAR2
     ) RETURN VARCHAR2
         AS
     BEGIN
-        RETURN apex_util.get_hash(apex_t_varchar2(p_password) );
-
+        RETURN apex_util.get_hash(apex_t_varchar2(lower(trim(p_email)),p_password),NULL);
     END get_hash;
 
 END lk_auth;
