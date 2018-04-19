@@ -57,7 +57,7 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
             email,
             password
         ) VALUES (
-            p_email,
+            lower(trim(p_email)),
             get_hash(p_email, p_password)
         );
 
@@ -80,14 +80,14 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
         FROM
             lk_users
         WHERE
-            email = p_email;
+            email = lower(trim(p_email));
 
         a_new_guid := sys_guid ();
         INSERT INTO lk_emails_guids (
             email,
             guid
         ) VALUES (
-            p_email,
+            lower(trim(p_email)),
             a_new_guid
         );
 
