@@ -27,7 +27,7 @@ prompt APPLICATION 103 - LK
 -- Application Export:
 --   Application:     103
 --   Name:            LK
---   Date and Time:   14:00 Wednesday April 25, 2018
+--   Date and Time:   13:35 Thursday April 26, 2018
 --   Exported By:     GERA
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -36,11 +36,12 @@ prompt APPLICATION 103 - LK
 --
 
 -- Application Statistics:
---   Pages:                      9
---     Items:                   13
---     Processes:               12
---     Regions:                 15
---     Buttons:                 15
+--   Pages:                     13
+--     Items:                   16
+--     Processes:               21
+--     Regions:                 20
+--     Buttons:                 22
+--     Dynamic Actions:          7
 --   Shared Components:
 --     Logic:
 --       Items:                  1
@@ -61,8 +62,9 @@ prompt APPLICATION 103 - LK
 --         Breadcrumb:           1
 --         Button:               3
 --         Report:               9
+--       Shortcuts:              2
 --     Globalization:
---       Messages:              12
+--       Messages:              13
 --     Reports:
 --   Supporting Objects:  Included
 
@@ -114,7 +116,7 @@ wwv_flow_api.create_flow(
 ,p_auto_time_zone=>'N'
 ,p_default_error_display_loc=>'INLINE_WITH_FIELD'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20180425135253'
+,p_last_upd_yyyymmddhh24miss=>'20180426133351'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>3
 ,p_ui_type_name => null
@@ -277,6 +279,10 @@ wwv_flow_api.create_page_group(
  p_id=>wwv_flow_api.id(12055386858033796)
 ,p_group_name=>'AUTH'
 ,p_group_desc=>'все касаемое аутентификации'
+);
+wwv_flow_api.create_page_group(
+ p_id=>wwv_flow_api.id(14461578485778309)
+,p_group_name=>'Accounts'
 );
 wwv_flow_api.create_page_group(
  p_id=>wwv_flow_api.id(12122140227731315)
@@ -8993,6 +8999,12 @@ wwv_flow_api.create_message(
 ,p_message_text=>'Помощь по полю: %0'
 ,p_is_js_message=>true
 );
+wwv_flow_api.create_message(
+ p_id=>wwv_flow_api.id(14334065453064459)
+,p_name=>'WWV_RENDER_REPORT3.SORT_BY_THIS_COLUMN'
+,p_message_language=>'ru'
+,p_message_text=>'Отсортировать по этой колонке'
+);
 end;
 /
 prompt --application/shared_components/globalization/dyntranslations
@@ -9002,7 +9014,18 @@ end;
 /
 prompt --application/shared_components/user_interface/shortcuts
 begin
-null;
+wwv_flow_api.create_shortcut(
+ p_id=>wwv_flow_api.id(14377288405202753)
+,p_shortcut_name=>'DELETE_CONFIRM_MSG'
+,p_shortcut_type=>'TEXT_ESCAPE_JS'
+,p_shortcut=>'Would you like to perform this delete action?'
+);
+wwv_flow_api.create_shortcut(
+ p_id=>wwv_flow_api.id(14383497244202828)
+,p_shortcut_name=>'OK_TO_GET_NEXT_PREV_PK_VALUE'
+,p_shortcut_type=>'TEXT_ESCAPE_JS'
+,p_shortcut=>'Are you sure you want to leave this page without saving?'
+);
 end;
 /
 prompt --application/shared_components/security/authentications
@@ -9676,55 +9699,14 @@ wwv_flow_api.create_page(
 ,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
 ,p_first_item=>'NO_FIRST_ITEM'
 ,p_autocomplete_on_off=>'OFF'
-,p_group_id=>wwv_flow_api.id(12122140227731315)
+,p_group_id=>wwv_flow_api.id(14461578485778309)
 ,p_step_template=>wwv_flow_api.id(12101358466597064)
 ,p_page_template_options=>'#DEFAULT#'
 ,p_overwrite_navigation_list=>'N'
 ,p_page_is_public_y_n=>'N'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20180425135253'
-);
-wwv_flow_api.create_report_region(
- p_id=>wwv_flow_api.id(14296818454239708)
-,p_name=>'Баланс по счету &P10_ACCOUNT_NUM.'
-,p_template=>wwv_flow_api.id(11832695845552332)
-,p_display_sequence=>20
-,p_include_in_reg_disp_sel_yn=>'Y'
-,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
-,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
-,p_display_point=>'BODY'
-,p_source=>'select ACCOUNT_ID, PERIOD from V_TOTAL_ACCOUNT where account_id = :P10_ACCOUNT_ID order by MN'
-,p_source_type=>'NATIVE_SQL_REPORT'
-,p_ajax_enabled=>'Y'
-,p_query_row_template=>wwv_flow_api.id(11842624439552356)
-,p_query_num_rows=>1000
-,p_query_options=>'DERIVED_REPORT_COLUMNS'
-,p_query_show_nulls_as=>'-'
-,p_csv_output=>'N'
-,p_prn_output=>'N'
-,p_sort_null=>'L'
-,p_plug_query_strip_html=>'N'
-);
-wwv_flow_api.create_report_columns(
- p_id=>wwv_flow_api.id(14296918214239709)
-,p_query_column_id=>1
-,p_column_alias=>'ACCOUNT_ID'
-,p_column_display_sequence=>1
-,p_column_heading=>'Account id'
-,p_use_as_row_header=>'N'
-,p_derived_column=>'N'
-,p_include_in_export=>'Y'
-);
-wwv_flow_api.create_report_columns(
- p_id=>wwv_flow_api.id(14297320229239713)
-,p_query_column_id=>2
-,p_column_alias=>'PERIOD'
-,p_column_display_sequence=>2
-,p_column_heading=>'Period'
-,p_use_as_row_header=>'N'
-,p_derived_column=>'N'
-,p_include_in_export=>'Y'
+,p_last_upd_yyyymmddhh24miss=>'20180426133140'
 );
 wwv_flow_api.create_report_region(
  p_id=>wwv_flow_api.id(42651444838297959)
@@ -9735,7 +9717,7 @@ wwv_flow_api.create_report_region(
 ,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
 ,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
 ,p_display_point=>'BODY'
-,p_source=>'select ACCOUNT_ID, ADDR, AREA_VAL, ACCOUNT_NUM from V_USER_ACCOUNTS where user_id = (select LK_AUTH.GET_USERID_BY_EMAIL(:APP_USER) from dual)'
+,p_source=>'select ID, ACCOUNT_ID, ADDR, AREA_VAL, ACCOUNT_NUM from V_USER_ACCOUNTS where user_id = (select LK_AUTH.GET_USERID_BY_EMAIL(:APP_USER) from dual)'
 ,p_source_type=>'NATIVE_SQL_REPORT'
 ,p_ajax_enabled=>'Y'
 ,p_query_row_template=>wwv_flow_api.id(11842624439552356)
@@ -9748,43 +9730,69 @@ wwv_flow_api.create_report_region(
 ,p_plug_query_strip_html=>'N'
 );
 wwv_flow_api.create_report_columns(
- p_id=>wwv_flow_api.id(14297112482239711)
+ p_id=>wwv_flow_api.id(14299168050239731)
 ,p_query_column_id=>1
-,p_column_alias=>'ACCOUNT_ID'
-,p_column_display_sequence=>4
+,p_column_alias=>'ID'
+,p_column_display_sequence=>6
 ,p_hidden_column=>'Y'
 ,p_derived_column=>'N'
 );
 wwv_flow_api.create_report_columns(
- p_id=>wwv_flow_api.id(14257555792243114)
+ p_id=>wwv_flow_api.id(14297112482239711)
 ,p_query_column_id=>2
+,p_column_alias=>'ACCOUNT_ID'
+,p_column_display_sequence=>5
+,p_column_link=>'f?p=&APP_ID.:32:&SESSION.::&DEBUG.:RP:P32_ACCOUNT_ID,P32_ACCOUNT_NUM:#ACCOUNT_ID#,#ACCOUNT_NUM#'
+,p_column_linktext=>'<span aria-hidden="true" class="fa fa-balance-scale"></span>'
+,p_column_link_attr=>'title="Баланс по счету"'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14257555792243114)
+,p_query_column_id=>3
 ,p_column_alias=>'ADDR'
-,p_column_display_sequence=>1
+,p_column_display_sequence=>2
 ,p_column_heading=>'Адрес помещения'
 ,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
 ,p_derived_column=>'N'
 ,p_include_in_export=>'Y'
 );
 wwv_flow_api.create_report_columns(
  p_id=>wwv_flow_api.id(14256731240243112)
-,p_query_column_id=>3
+,p_query_column_id=>4
 ,p_column_alias=>'AREA_VAL'
-,p_column_display_sequence=>2
+,p_column_display_sequence=>3
 ,p_column_heading=>'Площадь'
 ,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
 ,p_derived_column=>'N'
 ,p_include_in_export=>'Y'
 );
 wwv_flow_api.create_report_columns(
  p_id=>wwv_flow_api.id(14257107402243112)
-,p_query_column_id=>4
+,p_query_column_id=>5
 ,p_column_alias=>'ACCOUNT_NUM'
-,p_column_display_sequence=>3
+,p_column_display_sequence=>4
 ,p_column_heading=>'Номер счета'
-,p_column_link=>'f?p=&APP_ID.:10:&SESSION.::&DEBUG.:RP:P10_ACCOUNT_ID,P10_ACCOUNT_NUM:#ACCOUNT_ID#,#ACCOUNT_NUM#'
-,p_column_linktext=>'#ACCOUNT_NUM#'
-,p_column_link_attr=>'title="Баланс по счету"'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
 ,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14298835838239728)
+,p_query_column_id=>6
+,p_column_alias=>'DERIVED$01'
+,p_column_display_sequence=>1
+,p_column_link=>'f?p=&APP_ID.:33:&SESSION.::&DEBUG.:RP:P33_ID:#ID#'
+,p_column_linktext=>'<span aria-hidden="true" class="fa fa-trash-o"></span>'
+,p_column_link_attr=>'title="Удалить помещение"'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'Y'
 ,p_include_in_export=>'Y'
 );
 wwv_flow_api.create_page_button(
@@ -9792,30 +9800,50 @@ wwv_flow_api.create_page_button(
 ,p_button_sequence=>10
 ,p_button_plug_id=>wwv_flow_api.id(42651444838297959)
 ,p_button_name=>'AddAccount'
-,p_button_action=>'DEFINED_BY_DA'
+,p_button_action=>'REDIRECT_PAGE'
 ,p_button_template_options=>'#DEFAULT#'
 ,p_button_template_id=>wwv_flow_api.id(11855494343552396)
 ,p_button_image_alt=>'Добавить помещение'
 ,p_button_position=>'REGION_TEMPLATE_CLOSE'
-,p_warn_on_unsaved_changes=>null
+,p_button_redirect_url=>'f?p=&APP_ID.:16:&SESSION.::&DEBUG.:RP::'
 );
-wwv_flow_api.create_page_item(
- p_id=>wwv_flow_api.id(14296798130239707)
-,p_name=>'P10_ACCOUNT_ID'
-,p_item_sequence=>10
-,p_item_plug_id=>wwv_flow_api.id(42651444838297959)
-,p_display_as=>'NATIVE_HIDDEN'
-,p_attribute_01=>'Y'
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(14299421829239734)
+,p_name=>'DelAccount closed'
+,p_event_sequence=>10
+,p_triggering_element_type=>'REGION'
+,p_triggering_region_id=>wwv_flow_api.id(42651444838297959)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'apexafterclosedialog'
 );
-wwv_flow_api.create_page_item(
- p_id=>wwv_flow_api.id(14297265328239712)
-,p_name=>'P10_ACCOUNT_NUM'
-,p_item_sequence=>20
-,p_item_plug_id=>wwv_flow_api.id(42651444838297959)
-,p_source=>'(кликните на номере счета в списке Мои помещения)'
-,p_source_type=>'STATIC'
-,p_display_as=>'NATIVE_HIDDEN'
-,p_attribute_01=>'Y'
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(14299568315239735)
+,p_event_id=>wwv_flow_api.id(14299421829239734)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_api.id(42651444838297959)
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(14299662457239736)
+,p_name=>'AddAccount closed'
+,p_event_sequence=>20
+,p_triggering_element_type=>'BUTTON'
+,p_triggering_button_id=>wwv_flow_api.id(14257965581243114)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'apexafterclosedialog'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(14299794758239737)
+,p_event_id=>wwv_flow_api.id(14299662457239736)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_api.id(42651444838297959)
 );
 end;
 /
@@ -9848,24 +9876,24 @@ wwv_flow_api.create_page(
  p_id=>16
 ,p_user_interface_id=>wwv_flow_api.id(11866208218552473)
 ,p_name=>'AddAccount'
-,p_page_mode=>'NORMAL'
+,p_page_mode=>'MODAL'
 ,p_step_title=>'Добавление помещения'
 ,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
 ,p_first_item=>'NO_FIRST_ITEM'
 ,p_autocomplete_on_off=>'OFF'
-,p_group_id=>wwv_flow_api.id(12122140227731315)
-,p_step_template=>wwv_flow_api.id(12101358466597064)
+,p_group_id=>wwv_flow_api.id(14461578485778309)
 ,p_page_template_options=>'#DEFAULT#'
+,p_dialog_chained=>'Y'
 ,p_overwrite_navigation_list=>'N'
 ,p_page_is_public_y_n=>'N'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20180425085702'
+,p_last_upd_yyyymmddhh24miss=>'20180426133351'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(14108807820619945)
 ,p_plug_name=>'Добавление помещения в "Мои помещения"'
-,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
+,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader:t-Region--scrollBody'
 ,p_plug_template=>wwv_flow_api.id(11832695845552332)
 ,p_plug_display_sequence=>10
 ,p_include_in_reg_disp_sel_yn=>'N'
@@ -9881,12 +9909,13 @@ wwv_flow_api.create_page_button(
 ,p_button_sequence=>10
 ,p_button_plug_id=>wwv_flow_api.id(14108807820619945)
 ,p_button_name=>'CANCEL'
-,p_button_action=>'REDIRECT_PAGE'
+,p_button_action=>'DEFINED_BY_DA'
 ,p_button_template_options=>'#DEFAULT#'
 ,p_button_template_id=>wwv_flow_api.id(11855494343552396)
 ,p_button_image_alt=>'Отмена'
 ,p_button_position=>'REGION_TEMPLATE_CLOSE'
-,p_button_redirect_url=>'f?p=&APP_ID.:10:&SESSION.::&DEBUG.:::'
+,p_button_execute_validations=>'N'
+,p_warn_on_unsaved_changes=>null
 );
 wwv_flow_api.create_page_button(
  p_id=>wwv_flow_api.id(14109320895619945)
@@ -9898,15 +9927,6 @@ wwv_flow_api.create_page_button(
 ,p_button_template_id=>wwv_flow_api.id(11855494343552396)
 ,p_button_image_alt=>'Добавить'
 ,p_button_position=>'REGION_TEMPLATE_CLOSE'
-,p_database_action=>'UPDATE'
-);
-wwv_flow_api.create_page_branch(
- p_id=>wwv_flow_api.id(14111726327619950)
-,p_branch_action=>'f?p=&APP_ID.:10:&SESSION.&success_msg=#SUCCESS_MSG#'
-,p_branch_point=>'AFTER_PROCESSING'
-,p_branch_type=>'REDIRECT_URL'
-,p_branch_when_button_id=>wwv_flow_api.id(14109320895619945)
-,p_branch_sequence=>1
 );
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(14110113471619948)
@@ -9916,13 +9936,11 @@ wwv_flow_api.create_page_item(
 ,p_item_plug_id=>wwv_flow_api.id(14108807820619945)
 ,p_use_cache_before_default=>'NO'
 ,p_prompt=>'Номер счета'
+,p_placeholder=>'номер вашего лицевого счета из квитанции'
 ,p_display_as=>'NATIVE_TEXT_FIELD'
 ,p_cSize=>50
 ,p_field_template=>wwv_flow_api.id(11854986137552390)
 ,p_item_template_options=>'#DEFAULT#'
-,p_help_text=>wwv_flow_string.join(wwv_flow_t_varchar2(
-'Здесь будет рассказано где взять номер счета.',
-'С картинками.'))
 ,p_attribute_01=>'N'
 ,p_attribute_02=>'N'
 ,p_attribute_04=>'TEXT'
@@ -9962,11 +9980,17 @@ wwv_flow_api.create_page_item(
 ,p_lov_display_extra=>'NO'
 ,p_help_text=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<p>',
-'    При выборе адреса из списка не листайте весь список - в нем несколько тысяч записей. Пользуйтесь поиском.',
+'    При выборе адреса из списка не листайте весь список целиком, в нем несколько тысяч записей. Воспользуйтесь поиском, он отфильтрует лишнее.',
 '</p>',
-'<p> При поиске используйте знак процента (без пробелов) для разделения элементов ',
-'адреса. Т.е. пишите город%улица%дом или район%населенныйПункт%улица%дом, или просто улица%дом</p>',
-'<p>Названия можно указывать не полностью.</p>    ',
+'<p> В строке поиска используйте знак процента (без пробелов) для разделения элементов адреса:</p>',
+'<u>',
+'    <li>город%улица%дом</li>',
+'    <li>район%населенныйПункт%улица%дом</li>',
+'</u>',
+'<br>',
+'',
+'<p>Можно указывать не все элементы (но в правильной последовательности).</p>    ',
+'<p>Названия можно писать не полностью.</p>    ',
 '<p>Регистр букв не имеет значения.</p>',
 '',
 'Примеры:',
@@ -9974,11 +9998,29 @@ wwv_flow_api.create_page_item(
 '<li>тамбов%советская%148</li>',
 '<li>кирс%красн%жел</li>',
 '<li>строит%южн%15</li>',
+'<li>тамб%васил%1</li>',
 '</ul>    ',
 '',
 ''))
 ,p_attribute_01=>'NOT_ENTERABLE'
 ,p_attribute_02=>'FIRST_ROWSET'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(14298698197239726)
+,p_name=>'Cancel'
+,p_event_sequence=>10
+,p_triggering_element_type=>'BUTTON'
+,p_triggering_button_id=>wwv_flow_api.id(14109228880619945)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'click'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(14298796141239727)
+,p_event_id=>wwv_flow_api.id(14298698197239726)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_DIALOG_CANCEL'
 );
 wwv_flow_api.create_page_process(
  p_id=>wwv_flow_api.id(14111323863619950)
@@ -9995,7 +10037,715 @@ wwv_flow_api.create_page_process(
 ,p_process_error_message=>'#SQLERRM_TEXT#'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 ,p_process_when_button_id=>wwv_flow_api.id(14109320895619945)
-,p_process_success_message=>'Помещение успешно добавлено'
+);
+wwv_flow_api.create_page_process(
+ p_id=>wwv_flow_api.id(14299815586239738)
+,p_process_sequence=>20
+,p_process_point=>'AFTER_SUBMIT'
+,p_process_type=>'NATIVE_CLOSE_WINDOW'
+,p_process_name=>'Close Dialog'
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+);
+end;
+/
+prompt --application/pages/page_00032
+begin
+wwv_flow_api.create_page(
+ p_id=>32
+,p_user_interface_id=>wwv_flow_api.id(11866208218552473)
+,p_name=>'AccountBalance'
+,p_page_mode=>'MODAL'
+,p_step_title=>'Баланс по счету'
+,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
+,p_first_item=>'NO_FIRST_ITEM'
+,p_autocomplete_on_off=>'OFF'
+,p_group_id=>wwv_flow_api.id(14461578485778309)
+,p_page_template_options=>'#DEFAULT#'
+,p_dialog_chained=>'Y'
+,p_overwrite_navigation_list=>'N'
+,p_page_is_public_y_n=>'N'
+,p_cache_mode=>'NOCACHE'
+,p_last_updated_by=>'GERA'
+,p_last_upd_yyyymmddhh24miss=>'20180426103409'
+);
+wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(28758743791026665)
+,p_name=>'Счет &P32_ACCOUNT_NUM.'
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'Y'
+,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_display_point=>'BODY'
+,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'select ',
+'    TO_DATE(PERIOD,''mm.yyyy'') PERIOD,',
+'    CHARGE_SUM_MN,',
+'    PAY_SUM_MN,',
+'    CHARGE_SUM_TOTAL,',
+'    PAY_SUM_TOTAL,',
+'    -1*DOLG_SUM_TOTAL BALANCE,',
+'    CASE WHEN -1*DOLG_SUM_TOTAL < 0 THEN ''RED'' ELSE ''GREEN'' END BAlCOLOR',
+'from ',
+'    V_TOTAL_ACCOUNT ',
+'where ',
+'    account_id = :P32_ACCOUNT_ID ',
+''))
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_query_row_template=>wwv_flow_api.id(11842624439552356)
+,p_query_num_rows=>1000
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_show_nulls_as=>'-'
+,p_csv_output=>'N'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14464664484786964)
+,p_query_column_id=>1
+,p_column_alias=>'PERIOD'
+,p_column_display_sequence=>1
+,p_column_heading=>'Период'
+,p_use_as_row_header=>'N'
+,p_column_format=>'MM.YYYY'
+,p_column_alignment=>'CENTER'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14462272621786959)
+,p_query_column_id=>2
+,p_column_alias=>'CHARGE_SUM_MN'
+,p_column_display_sequence=>2
+,p_column_heading=>'Начислено за период'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14462603469786959)
+,p_query_column_id=>3
+,p_column_alias=>'PAY_SUM_MN'
+,p_column_display_sequence=>3
+,p_column_heading=>'Оплачено за период'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14463035834786960)
+,p_query_column_id=>4
+,p_column_alias=>'CHARGE_SUM_TOTAL'
+,p_column_display_sequence=>4
+,p_column_heading=>'Начислено за все время'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14463452332786960)
+,p_query_column_id=>5
+,p_column_alias=>'PAY_SUM_TOTAL'
+,p_column_display_sequence=>5
+,p_column_heading=>'Оплачено за все время'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14463804440786962)
+,p_query_column_id=>6
+,p_column_alias=>'BALANCE'
+,p_column_display_sequence=>6
+,p_column_heading=>'Баланс счета на конец периода'
+,p_use_as_row_header=>'N'
+,p_column_html_expression=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'<span style="color:#BALCOLOR#">#BALANCE#</span>',
+''))
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14464203765786962)
+,p_query_column_id=>7
+,p_column_alias=>'BALCOLOR'
+,p_column_display_sequence=>7
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(14465108334790303)
+,p_name=>'P32_ACCOUNT_ID'
+,p_item_sequence=>20
+,p_item_plug_id=>wwv_flow_api.id(28758743791026665)
+,p_use_cache_before_default=>'NO'
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(14465437889792670)
+,p_name=>'P32_ACCOUNT_NUM'
+,p_item_sequence=>10
+,p_item_plug_id=>wwv_flow_api.id(28758743791026665)
+,p_use_cache_before_default=>'NO'
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+end;
+/
+prompt --application/pages/page_00033
+begin
+wwv_flow_api.create_page(
+ p_id=>33
+,p_user_interface_id=>wwv_flow_api.id(11866208218552473)
+,p_name=>'DelAccount'
+,p_page_mode=>'MODAL'
+,p_step_title=>'Удаление помещения  из списка "Мои помещения"'
+,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
+,p_first_item=>'NO_FIRST_ITEM'
+,p_autocomplete_on_off=>'OFF'
+,p_javascript_code=>'var htmldb_delete_message=''"DELETE_CONFIRM_MSG"'';'
+,p_page_template_options=>'#DEFAULT#'
+,p_dialog_chained=>'Y'
+,p_overwrite_navigation_list=>'N'
+,p_page_is_public_y_n=>'N'
+,p_protection_level=>'C'
+,p_cache_mode=>'NOCACHE'
+,p_last_updated_by=>'GERA'
+,p_last_upd_yyyymmddhh24miss=>'20180426130456'
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(14488772046284942)
+,p_plug_name=>'Form on LK_USER_ACCOUNTS'
+,p_region_template_options=>'#DEFAULT#'
+,p_plug_template=>wwv_flow_api.id(11822602736552312)
+,p_plug_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_plug_display_point=>'BODY'
+,p_plug_query_row_template=>1
+,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_attribute_01=>'N'
+,p_attribute_02=>'TEXT'
+,p_attribute_03=>'Y'
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(14489495581284943)
+,p_plug_name=>'Buttons'
+,p_region_template_options=>'#DEFAULT#'
+,p_plug_template=>wwv_flow_api.id(11823090257552314)
+,p_plug_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_plug_display_point=>'REGION_POSITION_03'
+,p_plug_query_row_template=>1
+,p_attribute_01=>'N'
+,p_attribute_02=>'TEXT'
+,p_attribute_03=>'Y'
+);
+wwv_flow_api.create_page_button(
+ p_id=>wwv_flow_api.id(14489877681284945)
+,p_button_sequence=>10
+,p_button_plug_id=>wwv_flow_api.id(14489495581284943)
+,p_button_name=>'CANCEL'
+,p_button_action=>'DEFINED_BY_DA'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_api.id(11855494343552396)
+,p_button_image_alt=>'Отмена'
+,p_button_position=>'REGION_TEMPLATE_CLOSE'
+,p_warn_on_unsaved_changes=>null
+);
+wwv_flow_api.create_page_button(
+ p_id=>wwv_flow_api.id(14489388292284943)
+,p_button_sequence=>20
+,p_button_plug_id=>wwv_flow_api.id(14489495581284943)
+,p_button_name=>'DELETE'
+,p_button_action=>'SUBMIT'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_api.id(11855494343552396)
+,p_button_image_alt=>'Удалить'
+,p_button_position=>'REGION_TEMPLATE_DELETE'
+,p_button_execute_validations=>'N'
+,p_button_condition=>'P33_ID'
+,p_button_condition_type=>'ITEM_IS_NOT_NULL'
+,p_database_action=>'DELETE'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(14299362981239733)
+,p_name=>'P33_ADDR'
+,p_item_sequence=>20
+,p_item_plug_id=>wwv_flow_api.id(14488772046284942)
+,p_use_cache_before_default=>'NO'
+,p_source=>'select ADDR from V_USER_ACCOUNTS where ID = :P33_ID'
+,p_source_type=>'QUERY'
+,p_display_as=>'NATIVE_DISPLAY_ONLY'
+,p_field_template=>wwv_flow_api.id(11854888287552385)
+,p_item_template_options=>'#DEFAULT#'
+,p_attribute_01=>'N'
+,p_attribute_02=>'VALUE'
+,p_attribute_04=>'N'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(14492202726284953)
+,p_name=>'P33_ID'
+,p_item_sequence=>10
+,p_item_plug_id=>wwv_flow_api.id(14488772046284942)
+,p_use_cache_before_default=>'NO'
+,p_source=>'ID'
+,p_source_type=>'DB_COLUMN'
+,p_display_as=>'NATIVE_HIDDEN'
+,p_protection_level=>'S'
+,p_attribute_01=>'Y'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(14489966046284945)
+,p_name=>'Cancel Dialog'
+,p_event_sequence=>10
+,p_triggering_element_type=>'BUTTON'
+,p_triggering_button_id=>wwv_flow_api.id(14489877681284945)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'click'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(14490766970284948)
+,p_event_id=>wwv_flow_api.id(14489966046284945)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_DIALOG_CANCEL'
+,p_stop_execution_on_error=>'Y'
+);
+wwv_flow_api.create_page_process(
+ p_id=>wwv_flow_api.id(14495478091284960)
+,p_process_sequence=>10
+,p_process_point=>'AFTER_HEADER'
+,p_process_type=>'NATIVE_FORM_FETCH'
+,p_process_name=>'Fetch Row from LK_USER_ACCOUNTS'
+,p_attribute_02=>'LK_USER_ACCOUNTS'
+,p_attribute_03=>'P33_ID'
+,p_attribute_04=>'ID'
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+);
+wwv_flow_api.create_page_process(
+ p_id=>wwv_flow_api.id(14495834367284960)
+,p_process_sequence=>30
+,p_process_point=>'AFTER_SUBMIT'
+,p_process_type=>'NATIVE_FORM_PROCESS'
+,p_process_name=>'Process Row of LK_USER_ACCOUNTS'
+,p_attribute_02=>'LK_USER_ACCOUNTS'
+,p_attribute_03=>'P33_ID'
+,p_attribute_04=>'ID'
+,p_attribute_11=>'D'
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+,p_process_success_message=>'Action Processed.'
+);
+wwv_flow_api.create_page_process(
+ p_id=>wwv_flow_api.id(14496281056284962)
+,p_process_sequence=>40
+,p_process_point=>'AFTER_SUBMIT'
+,p_process_type=>'NATIVE_SESSION_STATE'
+,p_process_name=>'reset page'
+,p_attribute_01=>'CLEAR_CACHE_CURRENT_PAGE'
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+,p_process_when_button_id=>wwv_flow_api.id(14489388292284943)
+);
+wwv_flow_api.create_page_process(
+ p_id=>wwv_flow_api.id(14496605571284962)
+,p_process_sequence=>50
+,p_process_point=>'AFTER_SUBMIT'
+,p_process_type=>'NATIVE_CLOSE_WINDOW'
+,p_process_name=>'Close Dialog'
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+,p_process_when=>'CREATE,SAVE,DELETE'
+,p_process_when_type=>'REQUEST_IN_CONDITION'
+);
+end;
+/
+prompt --application/pages/page_00034
+begin
+wwv_flow_api.create_page(
+ p_id=>34
+,p_user_interface_id=>wwv_flow_api.id(11866208218552473)
+,p_name=>'RepSample'
+,p_page_mode=>'NORMAL'
+,p_step_title=>'RepSample'
+,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
+,p_first_item=>'NO_FIRST_ITEM'
+,p_autocomplete_on_off=>'OFF'
+,p_page_template_options=>'#DEFAULT#'
+,p_dialog_chained=>'Y'
+,p_overwrite_navigation_list=>'N'
+,p_page_is_public_y_n=>'N'
+,p_cache_mode=>'NOCACHE'
+,p_last_updated_by=>'GERA'
+,p_last_upd_yyyymmddhh24miss=>'20180426130850'
+);
+wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(14528872502839385)
+,p_name=>'Report 1'
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_display_point=>'BODY'
+,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'select "ID", ',
+'"USER_ID",',
+'"HOUSE_ID",',
+'"FLAT_NUM",',
+'"ACCOUNT_NUM",',
+'"ACCOUNT_ID",',
+'"ROOM_ID",',
+'"ROW_TIME"',
+'from "#OWNER#"."LK_USER_ACCOUNTS" ',
+'  ',
+''))
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_query_row_template=>wwv_flow_api.id(11842624439552356)
+,p_query_num_rows=>15
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_no_data_found=>'no data found'
+,p_query_num_rows_type=>'ROW_RANGES_IN_SELECT_LIST'
+,p_query_row_count_max=>500
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14529585424839389)
+,p_query_column_id=>1
+,p_column_alias=>'ID'
+,p_column_display_sequence=>1
+,p_column_link=>'f?p=#APP_ID#:35:#APP_SESSION#::::P35_ID:#ID#'
+,p_column_linktext=>'<img src="#IMAGE_PREFIX#app_ui/img/icons/apex-edit-pencil.png" class="apex-edit-pencil" alt="Edit">'
+,p_heading_alignment=>'LEFT'
+,p_ref_schema=>'FCR'
+,p_ref_table_name=>'LK_USER_ACCOUNTS'
+,p_ref_column_name=>'ID'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14529968951839389)
+,p_query_column_id=>2
+,p_column_alias=>'USER_ID'
+,p_column_display_sequence=>2
+,p_column_heading=>'User Id'
+,p_heading_alignment=>'LEFT'
+,p_ref_schema=>'FCR'
+,p_ref_table_name=>'LK_USER_ACCOUNTS'
+,p_ref_column_name=>'USER_ID'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14530396232839390)
+,p_query_column_id=>3
+,p_column_alias=>'HOUSE_ID'
+,p_column_display_sequence=>3
+,p_column_heading=>'House Id'
+,p_heading_alignment=>'LEFT'
+,p_ref_schema=>'FCR'
+,p_ref_table_name=>'LK_USER_ACCOUNTS'
+,p_ref_column_name=>'HOUSE_ID'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14530796250839390)
+,p_query_column_id=>4
+,p_column_alias=>'FLAT_NUM'
+,p_column_display_sequence=>4
+,p_column_heading=>'Flat Num'
+,p_heading_alignment=>'LEFT'
+,p_ref_schema=>'FCR'
+,p_ref_table_name=>'LK_USER_ACCOUNTS'
+,p_ref_column_name=>'FLAT_NUM'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14531169446839390)
+,p_query_column_id=>5
+,p_column_alias=>'ACCOUNT_NUM'
+,p_column_display_sequence=>5
+,p_column_heading=>'Account Num'
+,p_heading_alignment=>'LEFT'
+,p_ref_schema=>'FCR'
+,p_ref_table_name=>'LK_USER_ACCOUNTS'
+,p_ref_column_name=>'ACCOUNT_NUM'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14531598189839392)
+,p_query_column_id=>6
+,p_column_alias=>'ACCOUNT_ID'
+,p_column_display_sequence=>6
+,p_column_heading=>'Account Id'
+,p_heading_alignment=>'LEFT'
+,p_ref_schema=>'FCR'
+,p_ref_table_name=>'LK_USER_ACCOUNTS'
+,p_ref_column_name=>'ACCOUNT_ID'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14531989347839392)
+,p_query_column_id=>7
+,p_column_alias=>'ROOM_ID'
+,p_column_display_sequence=>7
+,p_column_heading=>'Room Id'
+,p_heading_alignment=>'LEFT'
+,p_ref_schema=>'FCR'
+,p_ref_table_name=>'LK_USER_ACCOUNTS'
+,p_ref_column_name=>'ROOM_ID'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(14532319940839393)
+,p_query_column_id=>8
+,p_column_alias=>'ROW_TIME'
+,p_column_display_sequence=>8
+,p_column_heading=>'Row Time'
+,p_heading_alignment=>'LEFT'
+,p_ref_schema=>'FCR'
+,p_ref_table_name=>'LK_USER_ACCOUNTS'
+,p_ref_column_name=>'ROW_TIME'
+);
+wwv_flow_api.create_page_button(
+ p_id=>wwv_flow_api.id(14536044682839400)
+,p_button_sequence=>30
+,p_button_plug_id=>wwv_flow_api.id(14528872502839385)
+,p_button_name=>'CREATE'
+,p_button_action=>'REDIRECT_PAGE'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_api.id(11855494343552396)
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Create'
+,p_button_position=>'REGION_TEMPLATE_CREATE'
+,p_button_redirect_url=>'f?p=&APP_ID.:35:&SESSION.::&DEBUG.:35'
+,p_grid_new_grid=>false
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(14535121889839398)
+,p_name=>'Edit Report - Dialog Closed'
+,p_event_sequence=>10
+,p_triggering_element_type=>'REGION'
+,p_triggering_region_id=>wwv_flow_api.id(14528872502839385)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'apexafterclosedialog'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(14535636041839398)
+,p_event_id=>wwv_flow_api.id(14535121889839398)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_api.id(14528872502839385)
+,p_stop_execution_on_error=>'Y'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(14536403031839400)
+,p_name=>'Create Button - Dialog Closed'
+,p_event_sequence=>20
+,p_triggering_element_type=>'BUTTON'
+,p_triggering_button_id=>wwv_flow_api.id(14536044682839400)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'apexafterclosedialog'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(14536970153839401)
+,p_event_id=>wwv_flow_api.id(14536403031839400)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_api.id(14528872502839385)
+,p_stop_execution_on_error=>'Y'
+);
+end;
+/
+prompt --application/pages/page_00035
+begin
+wwv_flow_api.create_page(
+ p_id=>35
+,p_user_interface_id=>wwv_flow_api.id(11866208218552473)
+,p_name=>'FormSample'
+,p_page_mode=>'MODAL'
+,p_step_title=>'FormSample'
+,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
+,p_first_item=>'NO_FIRST_ITEM'
+,p_autocomplete_on_off=>'OFF'
+,p_javascript_code=>'var htmldb_delete_message=''"DELETE_CONFIRM_MSG"'';'
+,p_page_template_options=>'#DEFAULT#'
+,p_dialog_chained=>'Y'
+,p_overwrite_navigation_list=>'N'
+,p_page_is_public_y_n=>'N'
+,p_protection_level=>'C'
+,p_cache_mode=>'NOCACHE'
+,p_last_updated_by=>'GERA'
+,p_last_upd_yyyymmddhh24miss=>'20180426130850'
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(14522664912839348)
+,p_plug_name=>'Form on LK_USER_ACCOUNTS'
+,p_region_template_options=>'#DEFAULT#'
+,p_plug_template=>wwv_flow_api.id(11822602736552312)
+,p_plug_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_plug_display_point=>'BODY'
+,p_plug_query_row_template=>1
+,p_attribute_01=>'N'
+,p_attribute_02=>'TEXT'
+,p_attribute_03=>'Y'
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(14523335835839348)
+,p_plug_name=>'Buttons'
+,p_region_template_options=>'#DEFAULT#'
+,p_plug_template=>wwv_flow_api.id(11823090257552314)
+,p_plug_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_plug_display_point=>'REGION_POSITION_03'
+,p_plug_query_row_template=>1
+,p_attribute_01=>'N'
+,p_attribute_02=>'TEXT'
+,p_attribute_03=>'Y'
+);
+wwv_flow_api.create_page_button(
+ p_id=>wwv_flow_api.id(14523747589839350)
+,p_button_sequence=>10
+,p_button_plug_id=>wwv_flow_api.id(14523335835839348)
+,p_button_name=>'CANCEL'
+,p_button_action=>'DEFINED_BY_DA'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_api.id(11855494343552396)
+,p_button_image_alt=>'Cancel'
+,p_button_position=>'REGION_TEMPLATE_CLOSE'
+,p_grid_new_grid=>false
+);
+wwv_flow_api.create_page_button(
+ p_id=>wwv_flow_api.id(14523287221839348)
+,p_button_sequence=>20
+,p_button_plug_id=>wwv_flow_api.id(14523335835839348)
+,p_button_name=>'DELETE'
+,p_button_action=>'REDIRECT_URL'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_api.id(11855494343552396)
+,p_button_image_alt=>'Delete'
+,p_button_position=>'REGION_TEMPLATE_DELETE'
+,p_button_redirect_url=>'javascript:apex.confirm(htmldb_delete_message,''DELETE'');'
+,p_button_execute_validations=>'N'
+,p_button_condition=>'P35_ID'
+,p_button_condition_type=>'ITEM_IS_NOT_NULL'
+,p_grid_new_grid=>false
+,p_database_action=>'DELETE'
+);
+wwv_flow_api.create_page_button(
+ p_id=>wwv_flow_api.id(14523108063839348)
+,p_button_sequence=>30
+,p_button_plug_id=>wwv_flow_api.id(14523335835839348)
+,p_button_name=>'SAVE'
+,p_button_action=>'SUBMIT'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_api.id(11855494343552396)
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Apply Changes'
+,p_button_position=>'REGION_TEMPLATE_NEXT'
+,p_button_condition=>'P35_ID'
+,p_button_condition_type=>'ITEM_IS_NOT_NULL'
+,p_grid_new_grid=>false
+,p_database_action=>'UPDATE'
+);
+wwv_flow_api.create_page_button(
+ p_id=>wwv_flow_api.id(14523018832839348)
+,p_button_sequence=>40
+,p_button_plug_id=>wwv_flow_api.id(14523335835839348)
+,p_button_name=>'CREATE'
+,p_button_action=>'SUBMIT'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_api.id(11855494343552396)
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Create'
+,p_button_position=>'REGION_TEMPLATE_NEXT'
+,p_button_condition=>'P35_ID'
+,p_button_condition_type=>'ITEM_IS_NULL'
+,p_grid_new_grid=>false
+,p_database_action=>'INSERT'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(14526145532839354)
+,p_name=>'P35_ID'
+,p_item_sequence=>10
+,p_item_plug_id=>wwv_flow_api.id(14522664912839348)
+,p_use_cache_before_default=>'NO'
+,p_prompt=>'Id'
+,p_source=>'ID'
+,p_source_type=>'DB_COLUMN'
+,p_display_as=>'NATIVE_HIDDEN'
+,p_label_alignment=>'RIGHT'
+,p_field_template=>wwv_flow_api.id(11854986137552390)
+,p_item_template_options=>'#DEFAULT#'
+,p_protection_level=>'S'
+,p_attribute_01=>'Y'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(14523827680839350)
+,p_name=>'Cancel Dialog'
+,p_event_sequence=>10
+,p_triggering_element_type=>'BUTTON'
+,p_triggering_button_id=>wwv_flow_api.id(14523747589839350)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'click'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(14524651215839351)
+,p_event_id=>wwv_flow_api.id(14523827680839350)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_DIALOG_CANCEL'
+,p_stop_execution_on_error=>'Y'
+);
+wwv_flow_api.create_page_process(
+ p_id=>wwv_flow_api.id(14526957645839382)
+,p_process_sequence=>10
+,p_process_point=>'AFTER_HEADER'
+,p_process_type=>'NATIVE_FORM_FETCH'
+,p_process_name=>'Fetch Row from LK_USER_ACCOUNTS'
+,p_attribute_02=>'LK_USER_ACCOUNTS'
+,p_attribute_03=>'P35_ID'
+,p_attribute_04=>'ID'
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+);
+wwv_flow_api.create_page_process(
+ p_id=>wwv_flow_api.id(14527336509839382)
+,p_process_sequence=>30
+,p_process_point=>'AFTER_SUBMIT'
+,p_process_type=>'NATIVE_FORM_PROCESS'
+,p_process_name=>'Process Row of LK_USER_ACCOUNTS'
+,p_attribute_02=>'LK_USER_ACCOUNTS'
+,p_attribute_03=>'P35_ID'
+,p_attribute_04=>'ID'
+,p_attribute_11=>'I:U:D'
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+,p_process_success_message=>'Action Processed.'
+);
+wwv_flow_api.create_page_process(
+ p_id=>wwv_flow_api.id(14527792534839384)
+,p_process_sequence=>40
+,p_process_point=>'AFTER_SUBMIT'
+,p_process_type=>'NATIVE_SESSION_STATE'
+,p_process_name=>'reset page'
+,p_attribute_01=>'CLEAR_CACHE_CURRENT_PAGE'
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+,p_process_when_button_id=>wwv_flow_api.id(14523287221839348)
+);
+wwv_flow_api.create_page_process(
+ p_id=>wwv_flow_api.id(14528100665839384)
+,p_process_sequence=>50
+,p_process_point=>'AFTER_SUBMIT'
+,p_process_type=>'NATIVE_CLOSE_WINDOW'
+,p_process_name=>'Close Dialog'
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+,p_process_when=>'CREATE,SAVE,DELETE'
+,p_process_when_type=>'REQUEST_IN_CONDITION'
 );
 end;
 /
@@ -10164,7 +10914,9 @@ end;
 /
 prompt --application/deployment/definition
 begin
-null;
+wwv_flow_api.create_install(
+ p_id=>wwv_flow_api.id(14461377644771914)
+);
 end;
 /
 prompt --application/deployment/install
