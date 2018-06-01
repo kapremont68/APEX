@@ -39,6 +39,10 @@ CREATE OR REPLACE PACKAGE lk_auth AS
         p_password VARCHAR2
     ) RETURN VARCHAR2;
 
+    FUNCTION get_userid_by_email (
+        p_email VARCHAR2
+    ) RETURN NUMBER;
+
 END lk_auth;
 /
 
@@ -57,8 +61,8 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
             email,
             password
         ) VALUES (
-            lower(trim(p_email)),
-            get_hash(p_email, p_password)
+            lower(TRIM(p_email) ),
+            get_hash(p_email,p_password)
         );
 
         COMMIT;
@@ -80,14 +84,14 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
         FROM
             lk_users
         WHERE
-            email = lower(trim(p_email));
+            email = lower(TRIM(p_email) );
 
         a_new_guid := sys_guid ();
         INSERT INTO lk_emails_guids (
             email,
             guid
         ) VALUES (
-            lower(trim(p_email)),
+            lower(TRIM(p_email) ),
             a_new_guid
         );
 
@@ -177,7 +181,7 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
         END IF;
         UPDATE lk_users
             SET
-                password = get_hash(a_email, p_new_password),
+                password = get_hash(a_email,p_new_password),
                 valid = 'Y'
         WHERE
             email = a_email;
@@ -212,7 +216,7 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
         THEN
             raise_application_error(-20000,'Сперва необходимо подтвердить регистрацию. Проверьте почту.');
         END IF;
-        RETURN rec.password = get_hash(p_username, p_password);
+        RETURN rec.password = get_hash(p_username,p_password);
     EXCEPTION
         WHEN no_data_found THEN
             RETURN false;
@@ -246,8 +250,28 @@ CREATE OR REPLACE PACKAGE BODY lk_auth AS
     ) RETURN VARCHAR2
         AS
     BEGIN
-        RETURN apex_util.get_hash(apex_t_varchar2(lower(trim(p_email)),p_password),NULL);
+        RETURN apex_util.get_hash(apex_t_varchar2(lower(trim(p_email) ),p_password),NULL);
     END get_hash;
+---------------------------------------------------------------
+    FUNCTION get_userid_by_email (
+        p_email VARCHAR2
+    ) RETURN NUMBER AS
+        res   NUMBER;
+    BEGIN
+        SELECT
+            id
+        INTO
+            res
+        FROM
+            lk_users
+        WHERE
+            email = lower(TRIM(p_email) );
+
+        RETURN res;
+    EXCEPTION
+        WHEN no_data_found THEN
+            return null;
+    END get_userid_by_email;
 
 END lk_auth;
 /
