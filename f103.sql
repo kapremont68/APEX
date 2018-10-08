@@ -27,7 +27,7 @@ prompt APPLICATION 103 - LK
 -- Application Export:
 --   Application:     103
 --   Name:            LK
---   Date and Time:   09:36 Thursday July 5, 2018
+--   Date and Time:   10:18 Monday October 8, 2018
 --   Exported By:     GERA
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -39,7 +39,7 @@ prompt APPLICATION 103 - LK
 --   Pages:                     18
 --     Items:                   33
 --     Processes:               23
---     Regions:                 35
+--     Regions:                 36
 --     Buttons:                 26
 --     Dynamic Actions:         13
 --   Shared Components:
@@ -107,8 +107,8 @@ wwv_flow_api.create_flow(
 ,p_public_user=>'APEX_PUBLIC_USER'
 ,p_proxy_server=> nvl(wwv_flow_application_install.get_proxy,'')
 ,p_flow_version=>'Версия 1.1'
-,p_flow_status=>'AVAILABLE_W_EDIT_LINK'
-,p_flow_unavailable_text=>'Личный кабинет в настоящее время недоступен.'
+,p_flow_status=>'AVAILABLE'
+,p_flow_unavailable_text=>'<center><h2>Личный кабинет закрыт на обслуживание до 18.09.2018</h2></center>'
 ,p_exact_substitutions_only=>'Y'
 ,p_browser_cache=>'N'
 ,p_browser_frame=>'D'
@@ -117,7 +117,7 @@ wwv_flow_api.create_flow(
 ,p_auto_time_zone=>'N'
 ,p_default_error_display_loc=>'INLINE_WITH_FIELD'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20180705093610'
+,p_last_upd_yyyymmddhh24miss=>'20181008101433'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>3
 ,p_ui_type_name => null
@@ -11478,7 +11478,7 @@ wwv_flow_api.create_page(
 ,p_user_interface_id=>wwv_flow_api.id(11866208218552473)
 ,p_name=>'MyAccHome'
 ,p_page_mode=>'NORMAL'
-,p_step_title=>'MyAccHome'
+,p_step_title=>'Мои помещения'
 ,p_step_sub_title=>'MyAccHome'
 ,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
 ,p_first_item=>'NO_FIRST_ITEM'
@@ -11490,7 +11490,7 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'N'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20180705091940'
+,p_last_upd_yyyymmddhh24miss=>'20180727142308'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(52581889269904046)
@@ -11822,9 +11822,9 @@ wwv_flow_api.create_report_region(
 ,p_plug_query_strip_html=>'N'
 );
 wwv_flow_api.create_report_columns(
- p_id=>wwv_flow_api.id(26338623425749628)
+ p_id=>wwv_flow_api.id(26361769611507719)
 ,p_query_column_id=>1
-,p_column_alias=>':P12_ACCOUNT_NUM'
+,p_column_alias=>':P1_ACCOUNT_NUM'
 ,p_column_display_sequence=>1
 ,p_column_heading=>'Счет'
 ,p_use_as_row_header=>'N'
@@ -11938,9 +11938,9 @@ wwv_flow_api.create_report_region(
 ,p_plug_query_strip_html=>'N'
 );
 wwv_flow_api.create_report_columns(
- p_id=>wwv_flow_api.id(26341748121749635)
+ p_id=>wwv_flow_api.id(26361824840507720)
 ,p_query_column_id=>1
-,p_column_alias=>':P12_ACCOUNT_NUM'
+,p_column_alias=>':P1_ACCOUNT_NUM'
 ,p_column_display_sequence=>1
 ,p_column_heading=>'Счет'
 ,p_use_as_row_header=>'N'
@@ -12043,7 +12043,7 @@ wwv_flow_api.create_report_columns(
 ,p_query_column_id=>2
 ,p_column_alias=>'ACCOUNT_ID'
 ,p_column_display_sequence=>5
-,p_column_link=>'f?p=&APP_ID.:12:&SESSION.::&DEBUG.:RP:P12_ACCOUNT_NUM,P12_ACCOUNT_ID,P12_HOUSE_ID:#ACCOUNT_NUM#,#ACCOUNT_ID#,#HOUSE_ID#'
+,p_column_link=>'f?p=&APP_ID.:1:&SESSION.::&DEBUG.:RP:P1_ACCOUNT_NUM,P1_ACCOUNT_ID,P1_HOUSE_ID:#ACCOUNT_NUM#,#ACCOUNT_ID#,#HOUSE_ID#'
 ,p_column_linktext=>'<span aria-hidden="true" class="fa fa-tabs fa-lg"></span>'
 ,p_column_link_attr=>'title="Подробная информация по счету"'
 ,p_disable_sort_column=>'N'
@@ -13624,7 +13624,7 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'N'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20180705093519'
+,p_last_upd_yyyymmddhh24miss=>'20180705165854'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(26252011634154511)
@@ -13643,7 +13643,7 @@ wwv_flow_api.create_report_region(
 ,p_name=>'Информация по дому'
 ,p_parent_plug_id=>wwv_flow_api.id(26252011634154511)
 ,p_template=>wwv_flow_api.id(11832695845552332)
-,p_display_sequence=>30
+,p_display_sequence=>60
 ,p_include_in_reg_disp_sel_yn=>'N'
 ,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader:t-Region--scrollBody'
 ,p_component_template_options=>'#DEFAULT#:t-AVPList--leftAligned'
@@ -13912,11 +13912,88 @@ wwv_flow_api.create_report_columns(
 ,p_include_in_export=>'N'
 );
 wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(49452007809758326)
+,p_name=>'Мои квитанции'
+,p_parent_plug_id=>wwv_flow_api.id(26252011634154511)
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>50
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_display_point=>'BODY'
+,p_source=>'select * from v_kvit where ACC_NUM = :P12_ACCOUNT_NUM'
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_query_row_template=>wwv_flow_api.id(11842624439552356)
+,p_query_num_rows=>15
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_show_nulls_as=>'-'
+,p_csv_output=>'N'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26366011522522818)
+,p_query_column_id=>1
+,p_column_alias=>'ID'
+,p_column_display_sequence=>1
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26365275760522815)
+,p_query_column_id=>2
+,p_column_alias=>'ACC_NUM'
+,p_column_display_sequence=>2
+,p_column_heading=>'Счет'
+,p_use_as_row_header=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26365695344522817)
+,p_query_column_id=>3
+,p_column_alias=>'PERIOD'
+,p_column_display_sequence=>3
+,p_column_heading=>'Период'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26366892019522823)
+,p_query_column_id=>4
+,p_column_alias=>'KVIT_LEN'
+,p_column_display_sequence=>5
+,p_use_as_row_header=>'N'
+,p_column_format=>'DOWNLOAD:V_KVIT:KVIT:ID:::FILE_NAME:::attachment:скачать квитанцию:'
+,p_derived_column=>'N'
+,p_include_in_export=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26366492376522821)
+,p_query_column_id=>5
+,p_column_alias=>'KVIT'
+,p_column_display_sequence=>4
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26367216477522823)
+,p_query_column_id=>6
+,p_column_alias=>'FILE_NAME'
+,p_column_display_sequence=>6
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_region(
  p_id=>wwv_flow_api.id(54982639794542377)
 ,p_name=>'Баланс по счету'
 ,p_parent_plug_id=>wwv_flow_api.id(26252011634154511)
 ,p_template=>wwv_flow_api.id(11832695845552332)
-,p_display_sequence=>10
+,p_display_sequence=>20
 ,p_include_in_reg_disp_sel_yn=>'N'
 ,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader:t-Region--scrollBody'
 ,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
@@ -14045,7 +14122,7 @@ wwv_flow_api.create_report_region(
 ,p_name=>'Мои платежи по счету'
 ,p_parent_plug_id=>wwv_flow_api.id(26252011634154511)
 ,p_template=>wwv_flow_api.id(11832695845552332)
-,p_display_sequence=>20
+,p_display_sequence=>40
 ,p_include_in_reg_disp_sel_yn=>'N'
 ,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader:t-Region--scrollBody'
 ,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
@@ -14385,7 +14462,7 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'N'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20180705091331'
+,p_last_upd_yyyymmddhh24miss=>'20180720082751'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(14108807820619945)
@@ -14472,7 +14549,7 @@ wwv_flow_api.create_page_item(
 ,p_display_as=>'PLUGIN_BE.CTB.SELECT2'
 ,p_lov=>'select ADDR, HOUSE_ID from V_HOUSE_ADDR order by ADDR'
 ,p_lov_display_null=>'YES'
-,p_lov_null_text=>'воспользуйтесь поиском для выбора адреса из списка'
+,p_lov_null_text=>'воспользуйтесь поиском для выбора дома из списка'
 ,p_field_template=>wwv_flow_api.id(11854986137552390)
 ,p_item_template_options=>'#DEFAULT#:t-Form-fieldContainer--large'
 ,p_lov_display_extra=>'NO'
@@ -14500,6 +14577,7 @@ wwv_flow_api.create_page_item(
 '</ul>    ',
 '',
 ''))
+,p_inline_help_text=>'как пользоваться поиском можно узнать нажав кнопку с вопросиком справа'
 ,p_attribute_01=>'SINGLE'
 ,p_attribute_08=>'MW'
 ,p_attribute_10=>'400'
@@ -15424,7 +15502,7 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'Y'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20180602152219'
+,p_last_upd_yyyymmddhh24miss=>'20181008101433'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(22912322845126828)
@@ -15539,24 +15617,39 @@ wwv_flow_api.create_page_process(
 ,p_process_type=>'NATIVE_PLSQL'
 ,p_process_name=>'Submit Feedback'
 ,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
-'apex_util.submit_feedback (',
-'    p_comment         => :P102_FEEDBACK,',
-'    p_type            => :P102_FEEDBACK_TYPE,',
-'    p_application_id  => :P102_APPLICATION_ID,',
-'    p_page_id         => :P102_PAGE_ID,',
-'    p_email           => null);',
-'    ',
-'apex_mail.send(',
-'            p_to         => ''online@kapremont68.ru'',',
-'            p_bcc        => ''info@kapremont68.ru'',',
-'            p_from       => ''online@kapremont68.ru'', ',
-'            p_subj       => ''Обращение из личного кабинета от ''|| lower(:APP_USER),',
-'            p_body       => :P102_FEEDBACK,',
-'            p_body_html  => :P102_FEEDBACK,',
-'            p_replyto    => lower(:APP_USER)',
-'    );',
-'    APEX_MAIL.PUSH_QUEUE;        ',
-'    '))
+'declare',
+'    ACC_NUMS varchar2(500);',
+'begin',
+'    SELECT',
+'       LISTAGG(ACCOUNT_NUM, '', '') WITHIN GROUP (order by USER_ID)',
+'       into',
+'       acc_nums',
+'    FROM',
+'        lk_users u',
+'        join LK_USER_ACCOUNTS ua on (u.ID = ua.USER_ID)',
+'    WHERE',
+'        email = lower(TRIM(:APP_USER));',
+'            ',
+'            ',
+'            ',
+'    apex_util.submit_feedback (',
+'        p_comment         => :P102_FEEDBACK,',
+'        p_type            => :P102_FEEDBACK_TYPE,',
+'        p_application_id  => :P102_APPLICATION_ID,',
+'        p_page_id         => :P102_PAGE_ID,',
+'        p_email           => null);',
+'        ',
+'    apex_mail.send(',
+'                p_to         => ''online@kapremont68.ru'',',
+'                p_bcc        => ''info@kapremont68.ru'',',
+'                p_from       => ''online@kapremont68.ru'', ',
+'                p_subj       => ''Обращение из личного кабинета от ''|| lower(:APP_USER),',
+'                p_body       => :P102_FEEDBACK || ''               СЧЕТА ПОЛЬЗОВАТЕЛЯ: ''||acc_nums,',
+'                p_body_html  => :P102_FEEDBACK || ''<br> СЧЕТА ПОЛЬЗОВАТЕЛЯ: ''||acc_nums,',
+'                p_replyto    => lower(:APP_USER)',
+'        );',
+'        APEX_MAIL.PUSH_QUEUE;        ',
+'end;                '))
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 ,p_process_when_button_id=>wwv_flow_api.id(22916260678126856)
 );
