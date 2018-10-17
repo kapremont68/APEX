@@ -27,7 +27,7 @@ prompt APPLICATION 103 - LK
 -- Application Export:
 --   Application:     103
 --   Name:            LK
---   Date and Time:   10:18 Monday October 8, 2018
+--   Date and Time:   14:13 Wednesday October 17, 2018
 --   Exported By:     GERA
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -39,7 +39,7 @@ prompt APPLICATION 103 - LK
 --   Pages:                     18
 --     Items:                   33
 --     Processes:               23
---     Regions:                 36
+--     Regions:                 37
 --     Buttons:                 26
 --     Dynamic Actions:         13
 --   Shared Components:
@@ -117,7 +117,7 @@ wwv_flow_api.create_flow(
 ,p_auto_time_zone=>'N'
 ,p_default_error_display_loc=>'INLINE_WITH_FIELD'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20181008101433'
+,p_last_upd_yyyymmddhh24miss=>'20181017123809'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>3
 ,p_ui_type_name => null
@@ -9017,7 +9017,7 @@ wwv_flow_api.create_message(
  p_id=>wwv_flow_api.id(22935265147467723)
 ,p_name=>'GENERAL_COMMENT'
 ,p_message_language=>'ru'
-,p_message_text=>'Другое'
+,p_message_text=>'Общие вопросы по кабинету'
 );
 wwv_flow_api.create_message(
  p_id=>wwv_flow_api.id(22935445108479650)
@@ -9029,7 +9029,7 @@ wwv_flow_api.create_message(
  p_id=>wwv_flow_api.id(22935653236482148)
 ,p_name=>'BUG'
 ,p_message_language=>'ru'
-,p_message_text=>'Ошибка'
+,p_message_text=>'Ошибка в работе кабинета'
 );
 end;
 /
@@ -12220,7 +12220,7 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'Y'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20180418165946'
+,p_last_upd_yyyymmddhh24miss=>'20181017123809'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(2379394129885548)
@@ -12337,6 +12337,7 @@ wwv_flow_api.create_page_process(
 '    apex_mail.send(',
 '            p_to         => :P2_EMAIL,',
 '            p_from       => ''online@kapremont68.ru'', ',
+'            p_replyto    => ''noreply@kapremont68.ru'',',
 '            p_subj       => ''online.kapremont68.ru - Подтверждение регистрации'',',
 '            p_body       => ''Для подтвеждения регистрации перейдите по адресу http://online.kapremont68.ru:8080/ords/f?p=lk:confirm:::::guid:''||new_guid,',
 '            p_body_html  => ''<a href="http://online.kapremont68.ru:8080/ords/f?p=lk:confirm:::::guid:''||new_guid||''">Подтвердить регистрацию на online.kapremont68.ru</a>''',
@@ -12936,7 +12937,7 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'Y'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20180419115025'
+,p_last_upd_yyyymmddhh24miss=>'20181017123733'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(23878724818029184)
@@ -13024,6 +13025,7 @@ wwv_flow_api.create_page_process(
 '    apex_mail.send(',
 '            p_to         => :P6_EMAIL,',
 '            p_from       => ''online@kapremont68.ru'', ',
+'            p_replyto    => ''noreply@kapremont68.ru'',',
 '            p_subj       => ''online.kapremont68.ru - Смена пароля'',',
 '            p_body       => ''Для смены пароля перейдите по адресу http://online.kapremont68.ru:8080/ords/f?p=lk:reset:::::guid:''||new_guid,',
 '            p_body_html  => ''<a href="http://online.kapremont68.ru:8080/ords/f?p=lk:reset:::::guid:''||new_guid||''">Сменить пароль для online.kapremont68.ru</a>''',
@@ -15502,7 +15504,7 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'Y'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20181008101433'
+,p_last_upd_yyyymmddhh24miss=>'20181017090508'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(22912322845126828)
@@ -15517,6 +15519,19 @@ wwv_flow_api.create_page_plug(
 ,p_attribute_01=>'N'
 ,p_attribute_02=>'TEXT'
 ,p_attribute_03=>'Y'
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(26362303474507725)
+,p_plug_name=>'Предупреждение'
+,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader:t-Region--scrollBody'
+,p_plug_template=>wwv_flow_api.id(11832695845552332)
+,p_plug_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'Y'
+,p_plug_display_point=>'REGION_POSITION_01'
+,p_plug_source=>'Обращения по вопросам капитального ремонта, не связанные с работой личного кабинета, принимаются по телефону <b>79-23-02</b> или на адрес электронной почты <a href=''mailto:info@kapremont68.ru''>info@kapremont68.ru</a>'
+,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_attribute_01=>'N'
+,p_attribute_02=>'HTML'
 );
 wwv_flow_api.create_page_button(
  p_id=>wwv_flow_api.id(22916687829126862)
@@ -15546,7 +15561,7 @@ wwv_flow_api.create_page_button(
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(22912717983126839)
 ,p_name=>'P102_APPLICATION_ID'
-,p_item_sequence=>1
+,p_item_sequence=>20
 ,p_item_plug_id=>wwv_flow_api.id(22912322845126828)
 ,p_display_as=>'NATIVE_HIDDEN'
 ,p_attribute_01=>'Y'
@@ -15554,7 +15569,7 @@ wwv_flow_api.create_page_item(
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(22913652005126850)
 ,p_name=>'P102_PAGE_ID'
-,p_item_sequence=>2
+,p_item_sequence=>30
 ,p_item_plug_id=>wwv_flow_api.id(22912322845126828)
 ,p_display_as=>'NATIVE_HIDDEN'
 ,p_attribute_01=>'Y'
@@ -15563,7 +15578,7 @@ wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(22914434059126853)
 ,p_name=>'P102_FEEDBACK'
 ,p_is_required=>true
-,p_item_sequence=>22
+,p_item_sequence=>50
 ,p_item_plug_id=>wwv_flow_api.id(22912322845126828)
 ,p_prompt=>'Текст сообщения'
 ,p_display_as=>'NATIVE_TEXTAREA'
@@ -15580,7 +15595,7 @@ wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(22915417130126854)
 ,p_name=>'P102_FEEDBACK_TYPE'
 ,p_is_required=>true
-,p_item_sequence=>12
+,p_item_sequence=>40
 ,p_item_plug_id=>wwv_flow_api.id(22912322845126828)
 ,p_prompt=>'Тип сообщения'
 ,p_source=>'1'
