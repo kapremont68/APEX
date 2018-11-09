@@ -27,7 +27,7 @@ prompt APPLICATION 103 - LK
 -- Application Export:
 --   Application:     103
 --   Name:            LK
---   Date and Time:   14:13 Wednesday October 17, 2018
+--   Date and Time:   15:08 Friday November 9, 2018
 --   Exported By:     GERA
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -36,12 +36,12 @@ prompt APPLICATION 103 - LK
 --
 
 -- Application Statistics:
---   Pages:                     18
---     Items:                   33
---     Processes:               23
---     Regions:                 37
---     Buttons:                 26
---     Dynamic Actions:         13
+--   Pages:                     22
+--     Items:                   47
+--     Processes:               25
+--     Regions:                 55
+--     Buttons:                 30
+--     Dynamic Actions:         26
 --   Shared Components:
 --     Logic:
 --       Items:                  1
@@ -87,7 +87,7 @@ wwv_flow_api.create_flow(
 ,p_owner=>nvl(wwv_flow_application_install.get_schema,'FCR')
 ,p_name=>nvl(wwv_flow_application_install.get_application_name,'LK')
 ,p_alias=>nvl(wwv_flow_application_install.get_application_alias,'LK')
-,p_page_view_logging=>'YES'
+,p_page_view_logging=>'NO'
 ,p_page_protection_enabled_y_n=>'Y'
 ,p_checksum_salt=>'06021EF8356E4D3C23720C8D15BFA37D88B3B581409ABFEC39F60D0E7271AAC9'
 ,p_bookmark_checksum_function=>'SH512'
@@ -106,9 +106,9 @@ wwv_flow_api.create_flow(
 ,p_favicons=>'<link rel="icon" href="/i/favicon.png">'
 ,p_public_user=>'APEX_PUBLIC_USER'
 ,p_proxy_server=> nvl(wwv_flow_application_install.get_proxy,'')
-,p_flow_version=>'Версия 1.1'
+,p_flow_version=>'Версия 1.2'
 ,p_flow_status=>'AVAILABLE'
-,p_flow_unavailable_text=>'<center><h2>Личный кабинет закрыт на обслуживание до 18.09.2018</h2></center>'
+,p_flow_unavailable_text=>'<center><h2>Личный кабинет закрыт на обслуживание</h2></center>'
 ,p_exact_substitutions_only=>'Y'
 ,p_browser_cache=>'N'
 ,p_browser_frame=>'D'
@@ -117,7 +117,7 @@ wwv_flow_api.create_flow(
 ,p_auto_time_zone=>'N'
 ,p_default_error_display_loc=>'INLINE_WITH_FIELD'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20181017123809'
+,p_last_upd_yyyymmddhh24miss=>'20181109144721'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>3
 ,p_ui_type_name => null
@@ -11490,7 +11490,7 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'N'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20180727142308'
+,p_last_upd_yyyymmddhh24miss=>'20181109144631'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(52581889269904046)
@@ -11793,7 +11793,7 @@ wwv_flow_api.create_report_region(
 ,p_display_point=>'BODY'
 ,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'select ',
-'    :P1_ACCOUNT_NUM,',
+'    :P1_ACCOUNT_NUM P1_ACCOUNT_NUM,',
 '    TO_DATE(PERIOD,''mm.yyyy'') PERIOD,',
 '    CHARGE_SUM_MN,',
 '    PAY_SUM_MN,',
@@ -11822,11 +11822,11 @@ wwv_flow_api.create_report_region(
 ,p_plug_query_strip_html=>'N'
 );
 wwv_flow_api.create_report_columns(
- p_id=>wwv_flow_api.id(26361769611507719)
+ p_id=>wwv_flow_api.id(27076066572249304)
 ,p_query_column_id=>1
-,p_column_alias=>':P1_ACCOUNT_NUM'
+,p_column_alias=>'P1_ACCOUNT_NUM'
 ,p_column_display_sequence=>1
-,p_column_heading=>'Счет'
+,p_column_heading=>'P1 account num'
 ,p_use_as_row_header=>'N'
 ,p_derived_column=>'N'
 ,p_include_in_export=>'Y'
@@ -11909,6 +11909,18 @@ wwv_flow_api.create_report_columns(
 ,p_column_display_sequence=>8
 ,p_hidden_column=>'Y'
 ,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27075919488249303)
+,p_query_column_id=>9
+,p_column_alias=>'DERIVED$01'
+,p_column_display_sequence=>9
+,p_column_heading=>'&nbsp;'
+,p_column_link=>'javascript:void(0);'
+,p_column_linktext=>'Скачать квитанцию'
+,p_column_link_attr=>'id=''#P1_ACCOUNT_NUM#_#PERIOD#'' class="kvit"'
+,p_derived_column=>'Y'
+,p_include_in_export=>'Y'
 );
 wwv_flow_api.create_report_region(
  p_id=>wwv_flow_api.id(104411181269973057)
@@ -12198,6 +12210,56 @@ wwv_flow_api.create_page_da_action(
 ,p_affected_region_id=>wwv_flow_api.id(95199283000488384)
 ,p_stop_execution_on_error=>'Y'
 );
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(27087904509528682)
+,p_name=>'KvitDownload'
+,p_event_sequence=>30
+,p_triggering_element_type=>'JQUERY_SELECTOR'
+,p_triggering_element=>'.kvit'
+,p_bind_type=>'bind'
+,p_bind_event_type=>'click'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(27088325945528687)
+,p_event_id=>wwv_flow_api.id(27087904509528682)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_JAVASCRIPT_CODE'
+,p_attribute_01=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'apex.server.process("GET_KVIT", ',
+'    {',
+'        x01: this.triggeringElement.id',
+'    }, { ',
+'        dataType: ''text'',',
+'        success: function(result) {',
+'            if (result !== ''null'') {',
+'                apex.navigation.openInNewWindow(''#IMAGE_PREFIX#pdf/''+result+''.pdf'',"_blank");',
+'            }',
+'        },',
+'        loadingIndicatorPosition: "page"',
+'    }',
+');',
+''))
+,p_stop_execution_on_error=>'Y'
+);
+wwv_flow_api.create_page_process(
+ p_id=>wwv_flow_api.id(27088771897532792)
+,p_process_sequence=>10
+,p_process_point=>'ON_DEMAND'
+,p_process_type=>'NATIVE_PLSQL'
+,p_process_name=>'GET_KVIT'
+,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'BEGIN',
+'    IF APEX_APPLICATION.G_X01 IS NOT NULL THEN',
+'        P_LK_KVIT.make_kvit(APEX_APPLICATION.G_X01);',
+'        HTP.PRN(APEX_APPLICATION.G_X01);',
+'    ELSE',
+'        HTP.PRN(''null'');',
+'    END IF;',
+'END;'))
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+);
 end;
 /
 prompt --application/pages/page_00002
@@ -12368,7 +12430,7 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'Y'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20180605152225'
+,p_last_upd_yyyymmddhh24miss=>'20181105143139'
 );
 wwv_flow_api.create_report_region(
  p_id=>wwv_flow_api.id(23086427421235510)
@@ -12426,6 +12488,31 @@ wwv_flow_api.create_report_columns(
 ,p_disable_sort_column=>'N'
 ,p_derived_column=>'N'
 ,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(26252307968154514)
+,p_plug_name=>'URL'
+,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
+,p_plug_template=>wwv_flow_api.id(11832695845552332)
+,p_plug_display_sequence=>30
+,p_include_in_reg_disp_sel_yn=>'Y'
+,p_plug_display_point=>'BODY'
+,p_plug_source_type=>'NATIVE_URL'
+,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_attribute_01=>'d:\app\ORACLE\product\12.1.0\dbhome_1\apex\images\pdf\444078560261837_11.2018.pdf'
+,p_attribute_02=>'IFRAME'
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(26252420697154515)
+,p_plug_name=>'New'
+,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
+,p_plug_template=>wwv_flow_api.id(11832695845552332)
+,p_plug_display_sequence=>40
+,p_include_in_reg_disp_sel_yn=>'Y'
+,p_plug_display_point=>'BODY'
+,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_attribute_01=>'N'
+,p_attribute_02=>'HTML'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(37163436093164835)
@@ -12611,6 +12698,19 @@ wwv_flow_api.create_page_item(
 ,p_attribute_01=>'Y'
 ,p_attribute_02=>'VALUE'
 ,p_attribute_04=>'Y'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(26252602970154517)
+,p_name=>'P3_NEW_3'
+,p_item_sequence=>20
+,p_item_plug_id=>wwv_flow_api.id(26252420697154515)
+,p_prompt=>'New'
+,p_display_as=>'NATIVE_DISPLAY_IMAGE'
+,p_begin_on_new_line=>'N'
+,p_begin_on_new_field=>'N'
+,p_field_template=>wwv_flow_api.id(11854986137552390)
+,p_item_template_options=>'#DEFAULT#'
+,p_attribute_01=>'URL'
 );
 wwv_flow_api.create_page_da_event(
  p_id=>wwv_flow_api.id(23058610377544917)
@@ -13242,7 +13342,7 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'Y'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20180605163703'
+,p_last_upd_yyyymmddhh24miss=>'20181105151848'
 );
 wwv_flow_api.create_report_region(
  p_id=>wwv_flow_api.id(23087074540235516)
@@ -13324,6 +13424,28 @@ wwv_flow_api.create_report_columns(
 ,p_column_display_sequence=>6
 ,p_hidden_column=>'Y'
 ,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26252794224154518)
+,p_query_column_id=>7
+,p_column_alias=>'DERIVED$01'
+,p_column_display_sequence=>7
+,p_column_heading=>'&nbsp;'
+,p_column_link=>'#IMAGE_PREFIX#pdf/444078560261837_11.2018.pdf'
+,p_column_linktext=>'<img src="#IMAGE_PREFIX#app_ui/img/icons/apex-edit-pencil.png" class="apex-edit-pencil" alt="">'
+,p_derived_column=>'Y'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26253275654154523)
+,p_query_column_id=>8
+,p_column_alias=>'DERIVED$02'
+,p_column_display_sequence=>8
+,p_column_link=>'#'
+,p_column_linktext=>'111111111'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'Y'
+,p_include_in_export=>'Y'
 );
 end;
 /
@@ -14446,6 +14568,1616 @@ wwv_flow_api.create_page_da_action(
 );
 end;
 /
+prompt --application/pages/page_00014
+begin
+wwv_flow_api.create_page(
+ p_id=>14
+,p_user_interface_id=>wwv_flow_api.id(11866208218552473)
+,p_name=>'MyAccHome3'
+,p_page_mode=>'NORMAL'
+,p_step_title=>'MyAccHome3'
+,p_step_sub_title=>'MyAccHome3'
+,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
+,p_first_item=>'NO_FIRST_ITEM'
+,p_autocomplete_on_off=>'OFF'
+,p_group_id=>wwv_flow_api.id(14539594654014623)
+,p_step_template=>wwv_flow_api.id(12101358466597064)
+,p_page_template_options=>'#DEFAULT#'
+,p_overwrite_navigation_list=>'N'
+,p_page_is_public_y_n=>'N'
+,p_cache_mode=>'NOCACHE'
+,p_last_updated_by=>'GERA'
+,p_last_upd_yyyymmddhh24miss=>'20181108122607'
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(79446763297512360)
+,p_plug_name=>'Tabs'
+,p_region_template_options=>'#DEFAULT#:t-TabsRegion-mod--simple'
+,p_plug_template=>wwv_flow_api.id(11835879897552339)
+,p_plug_display_sequence=>40
+,p_include_in_reg_disp_sel_yn=>'Y'
+,p_plug_display_point=>'BODY'
+,p_plug_query_row_template=>1
+,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_plug_display_condition_type=>'ITEM_IS_NOT_NULL'
+,p_plug_display_when_condition=>'P14_ACCOUNT_ID'
+,p_attribute_01=>'N'
+,p_attribute_02=>'HTML'
+);
+wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(102209445988372389)
+,p_name=>'Информация по дому'
+,p_parent_plug_id=>wwv_flow_api.id(79446763297512360)
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>30
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-AVPList--leftAligned'
+,p_display_point=>'BODY'
+,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'select ',
+'    * ',
+'from ',
+'    V_HOUSE_INFO ',
+'where ',
+'    house_id = :P14_HOUSE_ID'))
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_query_row_template=>wwv_flow_api.id(11844156812552357)
+,p_query_num_rows=>15
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_show_nulls_as=>'-'
+,p_query_no_data_found=>'Данные временно недоступны'
+,p_csv_output=>'N'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26877508952608335)
+,p_query_column_id=>1
+,p_column_alias=>'HOUSE_ID'
+,p_column_display_sequence=>1
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26883542636608342)
+,p_query_column_id=>2
+,p_column_alias=>'ADDR'
+,p_column_display_sequence=>2
+,p_column_heading=>'Адрес'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26882717817608342)
+,p_query_column_id=>3
+,p_column_alias=>'AREA_VAL'
+,p_column_display_sequence=>3
+,p_column_heading=>'Площадь, кв. м'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26883183953608342)
+,p_query_column_id=>4
+,p_column_alias=>'CREATE_YEAR'
+,p_column_display_sequence=>4
+,p_column_heading=>'Год постройки'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26883935644608342)
+,p_query_column_id=>5
+,p_column_alias=>'WALL_TYPE'
+,p_column_display_sequence=>5
+,p_column_heading=>'Тип стен'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26884353487608343)
+,p_query_column_id=>6
+,p_column_alias=>'FLORS'
+,p_column_display_sequence=>6
+,p_column_heading=>'Количество этажей'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26884717164608343)
+,p_query_column_id=>7
+,p_column_alias=>'ELEVATOR_TAG'
+,p_column_display_sequence=>7
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26877950964608337)
+,p_query_column_id=>8
+,p_column_alias=>'BASEMENT_TAG'
+,p_column_display_sequence=>8
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26878398271608337)
+,p_query_column_id=>9
+,p_column_alias=>'ROOF_YEAR'
+,p_column_display_sequence=>9
+,p_column_heading=>'Ремонт крыши запланирован на период'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26878793709608337)
+,p_query_column_id=>10
+,p_column_alias=>'FACE_YEAR'
+,p_column_display_sequence=>10
+,p_column_heading=>'Ремонт фасада  запланирован на период'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26879104767608337)
+,p_query_column_id=>11
+,p_column_alias=>'ISYS_YEAR'
+,p_column_display_sequence=>11
+,p_column_heading=>'Ремонт инженерных сетей  запланирован на период'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26879551259608339)
+,p_query_column_id=>12
+,p_column_alias=>'CMET_YEAR'
+,p_column_display_sequence=>12
+,p_column_heading=>'Ремонт приборов учета  запланирован на период'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26879905699608339)
+,p_query_column_id=>13
+,p_column_alias=>'ELEV_YEAR'
+,p_column_display_sequence=>13
+,p_column_heading=>'Ремонт лифтов  запланирован на период'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26885123727608345)
+,p_query_column_id=>14
+,p_column_alias=>'BASE_YEAR'
+,p_column_display_sequence=>14
+,p_column_heading=>'Ремонт подвала  запланирован на период'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26885588059608345)
+,p_query_column_id=>15
+,p_column_alias=>'FUND_YEAR'
+,p_column_display_sequence=>15
+,p_column_heading=>'Ремонт фундамента  запланирован на период'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26885985257608346)
+,p_query_column_id=>16
+,p_column_alias=>'CHARGE_SUM_TOTAL'
+,p_column_display_sequence=>16
+,p_column_heading=>'Всего начислено взносов, руб'
+,p_use_as_row_header=>'N'
+,p_column_format=>'999G999G999G999G990D00'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26880317677608339)
+,p_query_column_id=>17
+,p_column_alias=>'PAY_SUM_TOTAL'
+,p_column_display_sequence=>17
+,p_column_heading=>'Всего оплачено взносов, руб'
+,p_use_as_row_header=>'N'
+,p_column_format=>'999G999G999G999G990D00'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26880726782608339)
+,p_query_column_id=>18
+,p_column_alias=>'BARTER_SUM_TOTAL'
+,p_column_display_sequence=>20
+,p_column_heading=>'Произведено зачетов на сумму, руб'
+,p_use_as_row_header=>'N'
+,p_column_format=>'999G999G999G999G990D00'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26881172101608340)
+,p_query_column_id=>19
+,p_column_alias=>'DOLG_SUM_TOTAL'
+,p_column_display_sequence=>19
+,p_column_heading=>'Долг по оплате взносов, руб'
+,p_use_as_row_header=>'N'
+,p_column_format=>'999G999G999G999G990D00'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26881554935608340)
+,p_query_column_id=>20
+,p_column_alias=>'OWNERS_JOB_SUM_TOTAL'
+,p_column_display_sequence=>21
+,p_column_heading=>'Потрачено на работы, руб'
+,p_use_as_row_header=>'N'
+,p_column_format=>'999G999G999G999G990D00'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26881933675608340)
+,p_query_column_id=>21
+,p_column_alias=>'BALANCE_SUM_TOTAL'
+,p_column_display_sequence=>22
+,p_column_heading=>'Баланс дома на текущий момент, руб'
+,p_use_as_row_header=>'N'
+,p_column_format=>'999G999G999G999G990D00'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26882399804608340)
+,p_query_column_id=>22
+,p_column_alias=>'PAY_PERCENT'
+,p_column_display_sequence=>18
+,p_column_heading=>'Собираемость, %'
+,p_use_as_row_header=>'N'
+,p_column_format=>'999G999G999G999G990D00'
+,p_derived_column=>'N'
+,p_include_in_export=>'N'
+);
+wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(108177391457900226)
+,p_name=>'Баланс по счету'
+,p_parent_plug_id=>wwv_flow_api.id(79446763297512360)
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_display_point=>'BODY'
+,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'select ',
+'    :P14_ACCOUNT_NUM,',
+'    TO_DATE(PERIOD,''mm.yyyy'') PERIOD,',
+'    CHARGE_SUM_MN,',
+'    PAY_SUM_MN,',
+'    CHARGE_SUM_TOTAL,',
+'    PAY_SUM_TOTAL,',
+'    -1*DOLG_SUM_TOTAL BALANCE,',
+'    CASE WHEN -1*DOLG_SUM_TOTAL < 0 THEN ''RED'' ELSE ''GREEN'' END BAlCOLOR',
+'from ',
+'    V_TOTAL_ACCOUNT ',
+'where ',
+'    (CHARGE_SUM_MN <> 0 or PAY_SUM_MN <> 0)',
+'    and account_id = :P14_ACCOUNT_ID ',
+''))
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_query_row_template=>wwv_flow_api.id(11842624439552356)
+,p_query_num_rows=>1000
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_show_nulls_as=>'-'
+,p_query_no_data_found=>'Данные временно недоступны'
+,p_csv_output=>'Y'
+,p_csv_output_link_text=>'Сохранить в CSV файл'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_exp_filename=>'account_balance.csv'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26873706121608331)
+,p_query_column_id=>1
+,p_column_alias=>':P1_ACCOUNT_NUM'
+,p_column_display_sequence=>1
+,p_column_heading=>'Счет'
+,p_use_as_row_header=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26873399343608325)
+,p_query_column_id=>2
+,p_column_alias=>'PERIOD'
+,p_column_display_sequence=>2
+,p_column_heading=>'Период'
+,p_use_as_row_header=>'N'
+,p_column_format=>'MM.YYYY'
+,p_column_alignment=>'CENTER'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26870909037608321)
+,p_query_column_id=>3
+,p_column_alias=>'CHARGE_SUM_MN'
+,p_column_display_sequence=>3
+,p_column_heading=>'Начислено за период'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26871372510608321)
+,p_query_column_id=>4
+,p_column_alias=>'PAY_SUM_MN'
+,p_column_display_sequence=>4
+,p_column_heading=>'Оплачено за период'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26871798316608323)
+,p_query_column_id=>5
+,p_column_alias=>'CHARGE_SUM_TOTAL'
+,p_column_display_sequence=>5
+,p_column_heading=>'Начислено за все время'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26872136285608323)
+,p_query_column_id=>6
+,p_column_alias=>'PAY_SUM_TOTAL'
+,p_column_display_sequence=>6
+,p_column_heading=>'Оплачено за все время'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26872553795608323)
+,p_query_column_id=>7
+,p_column_alias=>'BALANCE'
+,p_column_display_sequence=>7
+,p_column_heading=>'Баланс счета на конец периода'
+,p_use_as_row_header=>'N'
+,p_column_html_expression=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'<span style="color:#BALCOLOR#">#BALANCE#</span>',
+''))
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26872904659608323)
+,p_query_column_id=>8
+,p_column_alias=>'BALCOLOR'
+,p_column_display_sequence=>8
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(131276055297581371)
+,p_name=>'Мои платежи по счету'
+,p_parent_plug_id=>wwv_flow_api.id(79446763297512360)
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>20
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_display_point=>'BODY'
+,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'select :P14_ACCOUNT_NUM, V.* from V_ACC_PAY V where ACC_ID = :P14_ACCOUNT_ID ',
+''))
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_query_row_template=>wwv_flow_api.id(11842624439552356)
+,p_query_num_rows=>1000
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_show_nulls_as=>'-'
+,p_query_no_data_found=>'Данные временно недоступны'
+,p_csv_output=>'Y'
+,p_csv_output_link_text=>'Сохранить в CSV файл'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_exp_filename=>'account_payments.csv'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26876885119608335)
+,p_query_column_id=>1
+,p_column_alias=>':P1_ACCOUNT_NUM'
+,p_column_display_sequence=>1
+,p_column_heading=>'Счет'
+,p_use_as_row_header=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26876468478608334)
+,p_query_column_id=>2
+,p_column_alias=>'ACC_ID'
+,p_column_display_sequence=>2
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26874403454608331)
+,p_query_column_id=>3
+,p_column_alias=>'PAY_DATE'
+,p_column_display_sequence=>3
+,p_column_heading=>'Дата'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26874815363608331)
+,p_query_column_id=>4
+,p_column_alias=>'PAY_SUM'
+,p_column_display_sequence=>4
+,p_column_heading=>'Сумма'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26875202172608332)
+,p_query_column_id=>5
+,p_column_alias=>'PAY_ACC'
+,p_column_display_sequence=>5
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26875640680608332)
+,p_query_column_id=>6
+,p_column_alias=>'PAY_PERIOD'
+,p_column_display_sequence=>6
+,p_column_heading=>'Период'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26876056043608334)
+,p_query_column_id=>7
+,p_column_alias=>'PAY_AGENT'
+,p_column_display_sequence=>7
+,p_column_heading=>'Платежный агент'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(122064157028096698)
+,p_name=>'Мои помещения'
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'Y'
+,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_display_point=>'BODY'
+,p_source=>'select ID, ACCOUNT_ID, ADDR, AREA_VAL, ACCOUNT_NUM, HOUSE_ID from LK_USER_ACCOUNTS where user_id = (select LK_AUTH.GET_USERID_BY_EMAIL(:APP_USER) from dual)'
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_query_row_template=>wwv_flow_api.id(11842624439552356)
+,p_query_num_rows=>100
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_show_nulls_as=>'-'
+,p_csv_output=>'N'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26867547597608318)
+,p_query_column_id=>1
+,p_column_alias=>'ID'
+,p_column_display_sequence=>6
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26865591186608315)
+,p_query_column_id=>2
+,p_column_alias=>'ACCOUNT_ID'
+,p_column_display_sequence=>5
+,p_column_link=>'f?p=&APP_ID.:1:&SESSION.::&DEBUG.:RP:P1_ACCOUNT_NUM,P1_ACCOUNT_ID,P1_HOUSE_ID:#ACCOUNT_NUM#,#ACCOUNT_ID#,#HOUSE_ID#'
+,p_column_linktext=>'<span aria-hidden="true" class="fa fa-tabs fa-lg"></span>'
+,p_column_link_attr=>'title="Подробная информация по счету"'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26866743301608317)
+,p_query_column_id=>3
+,p_column_alias=>'ADDR'
+,p_column_display_sequence=>2
+,p_column_heading=>'Адрес помещения'
+,p_use_as_row_header=>'N'
+,p_column_css_style=>'font-size:130%'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26865940807608315)
+,p_query_column_id=>4
+,p_column_alias=>'AREA_VAL'
+,p_column_display_sequence=>3
+,p_column_heading=>'Площадь'
+,p_use_as_row_header=>'N'
+,p_column_css_style=>'font-size:130%'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26866358344608317)
+,p_query_column_id=>5
+,p_column_alias=>'ACCOUNT_NUM'
+,p_column_display_sequence=>4
+,p_column_heading=>'Номер счета'
+,p_use_as_row_header=>'N'
+,p_column_css_style=>'font-size:130%'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26868318300608318)
+,p_query_column_id=>6
+,p_column_alias=>'HOUSE_ID'
+,p_column_display_sequence=>8
+,p_column_css_class=>'kvit'
+,p_column_link=>'#'
+,p_column_linktext=>'<span data-acc=''#ACCOUNT_NUM#'' aria-hidden="true" class="kvit fa fa-qrcode fa-lg"></span>'
+,p_column_link_attr=>'title="Сформировать квитанцию"'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26867176376608317)
+,p_query_column_id=>7
+,p_column_alias=>'DERIVED$01'
+,p_column_display_sequence=>1
+,p_column_link=>'f?p=&APP_ID.:33:&SESSION.::&DEBUG.:RP:P33_ID:#ID#'
+,p_column_linktext=>' <span aria-hidden="true" class="t-Icon fa fa-trash-o"></span>'
+,p_column_link_attr=>'class="t-Button t-Button--noLabel t-Button--icon t-Button--danger t-Button--link" title="Удалить помещение"'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'Y'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26867999888608318)
+,p_query_column_id=>8
+,p_column_alias=>'DERIVED$02'
+,p_column_display_sequence=>7
+,p_column_heading=>'&nbsp;'
+,p_derived_column=>'Y'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26255829831154549)
+,p_query_column_id=>9
+,p_column_alias=>'DERIVED$03'
+,p_column_display_sequence=>9
+,p_column_heading=>'&nbsp;'
+,p_column_link=>'javascript:void(0);'
+,p_column_linktext=>'1111111'
+,p_derived_column=>'Y'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_page_button(
+ p_id=>wwv_flow_api.id(26868745673608318)
+,p_button_sequence=>10
+,p_button_plug_id=>wwv_flow_api.id(122064157028096698)
+,p_button_name=>'AddAccount'
+,p_button_action=>'REDIRECT_PAGE'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_api.id(11855494343552396)
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Добавить помещение'
+,p_button_position=>'REGION_TEMPLATE_CLOSE'
+,p_button_redirect_url=>'f?p=&APP_ID.:16:&SESSION.::&DEBUG.:RP::'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(26255781524154548)
+,p_name=>'P14_NEW'
+,p_item_sequence=>10
+,p_item_plug_id=>wwv_flow_api.id(122064157028096698)
+,p_prompt=>'New'
+,p_display_as=>'NATIVE_YES_NO'
+,p_field_template=>wwv_flow_api.id(11854986137552390)
+,p_item_template_options=>'#DEFAULT#'
+,p_attribute_01=>'APPLICATION'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(26869103678608320)
+,p_name=>'P14_ACCOUNT_NUM'
+,p_item_sequence=>20
+,p_item_plug_id=>wwv_flow_api.id(122064157028096698)
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(26869508551608320)
+,p_name=>'P14_ACCOUNT_ID'
+,p_item_sequence=>30
+,p_item_plug_id=>wwv_flow_api.id(122064157028096698)
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(26869960066608320)
+,p_name=>'P14_HOUSE_ID'
+,p_item_sequence=>40
+,p_item_plug_id=>wwv_flow_api.id(122064157028096698)
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(26887277313608348)
+,p_name=>'DelAccount closed'
+,p_event_sequence=>10
+,p_triggering_element_type=>'REGION'
+,p_triggering_region_id=>wwv_flow_api.id(122064157028096698)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'apexafterclosedialog'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(26887712947608348)
+,p_event_id=>wwv_flow_api.id(26887277313608348)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_api.id(122064157028096698)
+,p_stop_execution_on_error=>'Y'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(26886319398608346)
+,p_name=>'AddAccount closed'
+,p_event_sequence=>20
+,p_triggering_element_type=>'BUTTON'
+,p_triggering_button_id=>wwv_flow_api.id(26868745673608318)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'apexafterclosedialog'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(26886856581608348)
+,p_event_id=>wwv_flow_api.id(26886319398608346)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_api.id(122064157028096698)
+,p_stop_execution_on_error=>'Y'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(26255018264154541)
+,p_name=>'MakeKvit'
+,p_event_sequence=>30
+,p_triggering_element_type=>'JQUERY_SELECTOR'
+,p_triggering_element=>'.kvit'
+,p_bind_type=>'bind'
+,p_bind_event_type=>'click'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(26255384274154544)
+,p_event_id=>wwv_flow_api.id(26255018264154541)
+,p_event_result=>'TRUE'
+,p_action_sequence=>20
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_JAVASCRIPT_CODE'
+,p_attribute_01=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'console.log(this);',
+''))
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(26255277886154543)
+,p_event_id=>wwv_flow_api.id(26255018264154541)
+,p_event_result=>'TRUE'
+,p_action_sequence=>30
+,p_execute_on_page_init=>'Y'
+,p_action=>'NATIVE_SET_VALUE'
+,p_affected_elements_type=>'ITEM'
+,p_affected_elements=>'P14_ACCOUNT_NUM'
+,p_attribute_01=>'JAVASCRIPT_EXPRESSION'
+,p_attribute_05=>'this.triggeringElement.dataset.acc'
+,p_attribute_09=>'N'
+,p_stop_execution_on_error=>'Y'
+,p_wait_for_result=>'Y'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(26255540458154546)
+,p_event_id=>wwv_flow_api.id(26255018264154541)
+,p_event_result=>'TRUE'
+,p_action_sequence=>40
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_EXECUTE_PLSQL_CODE'
+,p_attribute_01=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'APEX_UTIL.PAUSE(1);',
+'',
+'',
+'',
+' '))
+,p_stop_execution_on_error=>'Y'
+,p_wait_for_result=>'Y'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(26255426180154545)
+,p_event_id=>wwv_flow_api.id(26255018264154541)
+,p_event_result=>'TRUE'
+,p_action_sequence=>50
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_JAVASCRIPT_CODE'
+,p_attribute_01=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'console.log(this.triggeringElement.dataset.acc);',
+'console.log(''P14_ACCAUNT_NUM: ''+apex.item( "P14_ACCOUNT_NUM" ).getValue());',
+'',
+'apex.message.confirm( "Открыть в новой вкладке?", function( okPressed ) { ',
+'    if( okPressed ) {',
+'        apex.message.showPageSuccess(''Квитанция сформирована'');',
+'    }',
+'});'))
+);
+end;
+/
+prompt --application/pages/page_00015
+begin
+wwv_flow_api.create_page(
+ p_id=>15
+,p_user_interface_id=>wwv_flow_api.id(11866208218552473)
+,p_name=>'MyAccHome4'
+,p_page_mode=>'NORMAL'
+,p_step_title=>'MyAccHome4'
+,p_step_sub_title=>'MyAccHome4'
+,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
+,p_first_item=>'NO_FIRST_ITEM'
+,p_autocomplete_on_off=>'OFF'
+,p_group_id=>wwv_flow_api.id(14539594654014623)
+,p_step_template=>wwv_flow_api.id(12101358466597064)
+,p_page_template_options=>'#DEFAULT#'
+,p_overwrite_navigation_list=>'N'
+,p_page_is_public_y_n=>'N'
+,p_cache_mode=>'NOCACHE'
+,p_last_updated_by=>'GERA'
+,p_last_upd_yyyymmddhh24miss=>'20181109143652'
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(79493507254037799)
+,p_plug_name=>'Tabs'
+,p_region_template_options=>'#DEFAULT#:t-TabsRegion-mod--simple'
+,p_plug_template=>wwv_flow_api.id(11835879897552339)
+,p_plug_display_sequence=>40
+,p_include_in_reg_disp_sel_yn=>'Y'
+,p_plug_display_point=>'BODY'
+,p_plug_query_row_template=>1
+,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_plug_display_condition_type=>'ITEM_IS_NOT_NULL'
+,p_plug_display_when_condition=>'P15_ACCOUNT_ID'
+,p_attribute_01=>'N'
+,p_attribute_02=>'HTML'
+);
+wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(102256189944897828)
+,p_name=>'Информация по дому'
+,p_parent_plug_id=>wwv_flow_api.id(79493507254037799)
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>30
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-AVPList--leftAligned'
+,p_display_point=>'BODY'
+,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'select ',
+'    * ',
+'from ',
+'    V_HOUSE_INFO ',
+'where ',
+'    house_id = :P15_HOUSE_ID'))
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_query_row_template=>wwv_flow_api.id(11844156812552357)
+,p_query_num_rows=>15
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_show_nulls_as=>'-'
+,p_query_no_data_found=>'Данные временно недоступны'
+,p_csv_output=>'N'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26924356829133831)
+,p_query_column_id=>1
+,p_column_alias=>'HOUSE_ID'
+,p_column_display_sequence=>1
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26930359260133842)
+,p_query_column_id=>2
+,p_column_alias=>'ADDR'
+,p_column_display_sequence=>2
+,p_column_heading=>'Адрес'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26929568221133840)
+,p_query_column_id=>3
+,p_column_alias=>'AREA_VAL'
+,p_column_display_sequence=>3
+,p_column_heading=>'Площадь, кв. м'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26929906215133842)
+,p_query_column_id=>4
+,p_column_alias=>'CREATE_YEAR'
+,p_column_display_sequence=>4
+,p_column_heading=>'Год постройки'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26930776617133843)
+,p_query_column_id=>5
+,p_column_alias=>'WALL_TYPE'
+,p_column_display_sequence=>5
+,p_column_heading=>'Тип стен'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26931121337133843)
+,p_query_column_id=>6
+,p_column_alias=>'FLORS'
+,p_column_display_sequence=>6
+,p_column_heading=>'Количество этажей'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26931567976133845)
+,p_query_column_id=>7
+,p_column_alias=>'ELEVATOR_TAG'
+,p_column_display_sequence=>7
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26924798189133832)
+,p_query_column_id=>8
+,p_column_alias=>'BASEMENT_TAG'
+,p_column_display_sequence=>8
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26925173617133832)
+,p_query_column_id=>9
+,p_column_alias=>'ROOF_YEAR'
+,p_column_display_sequence=>9
+,p_column_heading=>'Ремонт крыши запланирован на период'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26925568212133834)
+,p_query_column_id=>10
+,p_column_alias=>'FACE_YEAR'
+,p_column_display_sequence=>10
+,p_column_heading=>'Ремонт фасада  запланирован на период'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26925928887133834)
+,p_query_column_id=>11
+,p_column_alias=>'ISYS_YEAR'
+,p_column_display_sequence=>11
+,p_column_heading=>'Ремонт инженерных сетей  запланирован на период'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26926351659133835)
+,p_query_column_id=>12
+,p_column_alias=>'CMET_YEAR'
+,p_column_display_sequence=>12
+,p_column_heading=>'Ремонт приборов учета  запланирован на период'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26926793083133835)
+,p_query_column_id=>13
+,p_column_alias=>'ELEV_YEAR'
+,p_column_display_sequence=>13
+,p_column_heading=>'Ремонт лифтов  запланирован на период'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26931979238133845)
+,p_query_column_id=>14
+,p_column_alias=>'BASE_YEAR'
+,p_column_display_sequence=>14
+,p_column_heading=>'Ремонт подвала  запланирован на период'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26932312984133846)
+,p_query_column_id=>15
+,p_column_alias=>'FUND_YEAR'
+,p_column_display_sequence=>15
+,p_column_heading=>'Ремонт фундамента  запланирован на период'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26932729750133848)
+,p_query_column_id=>16
+,p_column_alias=>'CHARGE_SUM_TOTAL'
+,p_column_display_sequence=>16
+,p_column_heading=>'Всего начислено взносов, руб'
+,p_use_as_row_header=>'N'
+,p_column_format=>'999G999G999G999G990D00'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26927136676133837)
+,p_query_column_id=>17
+,p_column_alias=>'PAY_SUM_TOTAL'
+,p_column_display_sequence=>17
+,p_column_heading=>'Всего оплачено взносов, руб'
+,p_use_as_row_header=>'N'
+,p_column_format=>'999G999G999G999G990D00'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26927563503133837)
+,p_query_column_id=>18
+,p_column_alias=>'BARTER_SUM_TOTAL'
+,p_column_display_sequence=>20
+,p_column_heading=>'Произведено зачетов на сумму, руб'
+,p_use_as_row_header=>'N'
+,p_column_format=>'999G999G999G999G990D00'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26927953415133839)
+,p_query_column_id=>19
+,p_column_alias=>'DOLG_SUM_TOTAL'
+,p_column_display_sequence=>19
+,p_column_heading=>'Долг по оплате взносов, руб'
+,p_use_as_row_header=>'N'
+,p_column_format=>'999G999G999G999G990D00'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26928367980133839)
+,p_query_column_id=>20
+,p_column_alias=>'OWNERS_JOB_SUM_TOTAL'
+,p_column_display_sequence=>21
+,p_column_heading=>'Потрачено на работы, руб'
+,p_use_as_row_header=>'N'
+,p_column_format=>'999G999G999G999G990D00'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26928768743133840)
+,p_query_column_id=>21
+,p_column_alias=>'BALANCE_SUM_TOTAL'
+,p_column_display_sequence=>22
+,p_column_heading=>'Баланс дома на текущий момент, руб'
+,p_use_as_row_header=>'N'
+,p_column_format=>'999G999G999G999G990D00'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26929175497133840)
+,p_query_column_id=>22
+,p_column_alias=>'PAY_PERCENT'
+,p_column_display_sequence=>18
+,p_column_heading=>'Собираемость, %'
+,p_use_as_row_header=>'N'
+,p_column_format=>'999G999G999G999G990D00'
+,p_derived_column=>'N'
+,p_include_in_export=>'N'
+);
+wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(108224135414425665)
+,p_name=>'Баланс по счету'
+,p_parent_plug_id=>wwv_flow_api.id(79493507254037799)
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_display_point=>'BODY'
+,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'select ',
+'    :P15_ACCOUNT_NUM P15_ACCOUNT_NUM,',
+'    TO_DATE(PERIOD,''mm.yyyy'') PERIOD,',
+'    CHARGE_SUM_MN,',
+'    PAY_SUM_MN,',
+'    CHARGE_SUM_TOTAL,',
+'    PAY_SUM_TOTAL,',
+'    -1*DOLG_SUM_TOTAL BALANCE,',
+'    CASE WHEN -1*DOLG_SUM_TOTAL < 0 THEN ''RED'' ELSE ''GREEN'' END BAlCOLOR',
+'from ',
+'    V_TOTAL_ACCOUNT ',
+'where ',
+'    (CHARGE_SUM_MN <> 0 or PAY_SUM_MN <> 0)',
+'    and account_id = :P15_ACCOUNT_ID ',
+''))
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_query_row_template=>wwv_flow_api.id(11842624439552356)
+,p_query_num_rows=>1000
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_show_nulls_as=>'-'
+,p_query_no_data_found=>'Данные временно недоступны'
+,p_csv_output=>'Y'
+,p_csv_output_link_text=>'Сохранить в CSV файл'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_exp_filename=>'account_balance.csv'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26255903475154550)
+,p_query_column_id=>1
+,p_column_alias=>'P15_ACCOUNT_NUM'
+,p_column_display_sequence=>1
+,p_column_heading=>'Счет'
+,p_use_as_row_header=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26920157879133821)
+,p_query_column_id=>2
+,p_column_alias=>'PERIOD'
+,p_column_display_sequence=>2
+,p_column_heading=>'Период'
+,p_use_as_row_header=>'N'
+,p_column_format=>'MM.YYYY'
+,p_column_alignment=>'CENTER'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26917747839133815)
+,p_query_column_id=>3
+,p_column_alias=>'CHARGE_SUM_MN'
+,p_column_display_sequence=>3
+,p_column_heading=>'Начислено за период'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26918192683133815)
+,p_query_column_id=>4
+,p_column_alias=>'PAY_SUM_MN'
+,p_column_display_sequence=>4
+,p_column_heading=>'Оплачено за период'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26918527154133817)
+,p_query_column_id=>5
+,p_column_alias=>'CHARGE_SUM_TOTAL'
+,p_column_display_sequence=>5
+,p_column_heading=>'Начислено за все время'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26918975482133817)
+,p_query_column_id=>6
+,p_column_alias=>'PAY_SUM_TOTAL'
+,p_column_display_sequence=>6
+,p_column_heading=>'Оплачено за все время'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26919375781133818)
+,p_query_column_id=>7
+,p_column_alias=>'BALANCE'
+,p_column_display_sequence=>7
+,p_column_heading=>'Баланс счета на конец периода'
+,p_use_as_row_header=>'N'
+,p_column_html_expression=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'<span style="color:#BALCOLOR#">#BALANCE#</span>',
+''))
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26919708980133820)
+,p_query_column_id=>8
+,p_column_alias=>'BALCOLOR'
+,p_column_display_sequence=>8
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26935279618172802)
+,p_query_column_id=>9
+,p_column_alias=>'DERIVED$01'
+,p_column_display_sequence=>9
+,p_column_heading=>'&nbsp;'
+,p_column_link=>'javascript:void(0);'
+,p_column_linktext=>'Скачать квитанцию'
+,p_column_link_attr=>'id=''#P15_ACCOUNT_NUM#_#PERIOD#'' class="kvit"'
+,p_derived_column=>'Y'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(131322799254106810)
+,p_name=>'Мои платежи по счету'
+,p_parent_plug_id=>wwv_flow_api.id(79493507254037799)
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>20
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_display_point=>'BODY'
+,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'select :P15_ACCOUNT_NUM P15_ACCOUNT_NUM, V.* from V_ACC_PAY V where ACC_ID = :P15_ACCOUNT_ID ',
+''))
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_query_row_template=>wwv_flow_api.id(11842624439552356)
+,p_query_num_rows=>1000
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_show_nulls_as=>'-'
+,p_query_no_data_found=>'Данные временно недоступны'
+,p_csv_output=>'Y'
+,p_csv_output_link_text=>'Сохранить в CSV файл'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_exp_filename=>'account_payments.csv'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26935185788172801)
+,p_query_column_id=>1
+,p_column_alias=>'P15_ACCOUNT_NUM'
+,p_column_display_sequence=>1
+,p_column_heading=>'Счет'
+,p_use_as_row_header=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26923219343133828)
+,p_query_column_id=>2
+,p_column_alias=>'ACC_ID'
+,p_column_display_sequence=>2
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26921270912133823)
+,p_query_column_id=>3
+,p_column_alias=>'PAY_DATE'
+,p_column_display_sequence=>3
+,p_column_heading=>'Дата'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26921632983133825)
+,p_query_column_id=>4
+,p_column_alias=>'PAY_SUM'
+,p_column_display_sequence=>4
+,p_column_heading=>'Сумма'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26922096297133826)
+,p_query_column_id=>5
+,p_column_alias=>'PAY_ACC'
+,p_column_display_sequence=>5
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26922438868133826)
+,p_query_column_id=>6
+,p_column_alias=>'PAY_PERIOD'
+,p_column_display_sequence=>6
+,p_column_heading=>'Период'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26922887707133828)
+,p_query_column_id=>7
+,p_column_alias=>'PAY_AGENT'
+,p_column_display_sequence=>7
+,p_column_heading=>'Платежный агент'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(122110900984622137)
+,p_name=>'Мои помещения'
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'Y'
+,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_display_point=>'BODY'
+,p_source=>'select ID, ACCOUNT_ID, ADDR, AREA_VAL, ACCOUNT_NUM, HOUSE_ID from LK_USER_ACCOUNTS where user_id = (select LK_AUTH.GET_USERID_BY_EMAIL(:APP_USER) from dual)'
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_query_row_template=>wwv_flow_api.id(11842624439552356)
+,p_query_num_rows=>100
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_show_nulls_as=>'-'
+,p_csv_output=>'N'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26914300939133787)
+,p_query_column_id=>1
+,p_column_alias=>'ID'
+,p_column_display_sequence=>6
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26912391135133782)
+,p_query_column_id=>2
+,p_column_alias=>'ACCOUNT_ID'
+,p_column_display_sequence=>5
+,p_column_link=>'f?p=&APP_ID.:15:&SESSION.::&DEBUG.:RP:P15_ACCOUNT_NUM,P15_ACCOUNT_ID,P15_HOUSE_ID:#ACCOUNT_NUM#,#ACCOUNT_ID#,#HOUSE_ID#'
+,p_column_linktext=>'<span aria-hidden="true" class="fa fa-tabs fa-lg"></span>'
+,p_column_link_attr=>'title="Подробная информация по счету"'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26913528993133785)
+,p_query_column_id=>3
+,p_column_alias=>'ADDR'
+,p_column_display_sequence=>2
+,p_column_heading=>'Адрес помещения'
+,p_use_as_row_header=>'N'
+,p_column_css_style=>'font-size:130%'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26912746638133784)
+,p_query_column_id=>4
+,p_column_alias=>'AREA_VAL'
+,p_column_display_sequence=>3
+,p_column_heading=>'Площадь'
+,p_use_as_row_header=>'N'
+,p_column_css_style=>'font-size:130%'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26913166683133784)
+,p_query_column_id=>5
+,p_column_alias=>'ACCOUNT_NUM'
+,p_column_display_sequence=>4
+,p_column_heading=>'Номер счета'
+,p_use_as_row_header=>'N'
+,p_column_css_style=>'font-size:130%'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26915121039133790)
+,p_query_column_id=>6
+,p_column_alias=>'HOUSE_ID'
+,p_column_display_sequence=>8
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26913957388133787)
+,p_query_column_id=>7
+,p_column_alias=>'DERIVED$01'
+,p_column_display_sequence=>1
+,p_column_link=>'f?p=&APP_ID.:33:&SESSION.::&DEBUG.:RP:P33_ID:#ID#'
+,p_column_linktext=>' <span aria-hidden="true" class="t-Icon fa fa-trash-o"></span>'
+,p_column_link_attr=>'class="t-Button t-Button--noLabel t-Button--icon t-Button--danger t-Button--link" title="Удалить помещение"'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'Y'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26914752680133789)
+,p_query_column_id=>8
+,p_column_alias=>'DERIVED$02'
+,p_column_display_sequence=>7
+,p_column_heading=>'&nbsp;'
+,p_column_link=>'#'
+,p_column_linktext=>'<script type="text/javascript" src="https://widget.vp.ru/vpjs1.1/common.js"></script><span onClick="VP.widget.modal({url:''https://vp.ru/common-modal/?action=provider&guid=nofondkapremto&utm_source=widget&utm_medium=nofondkapremto_full&utm_campaign=ka'
+||'premont68.ru&acc=#ACCOUNT_NUM#'',});"><span aria-hidden="true" class="fa fa-cc-visa fa-lg"></span></span> '
+,p_column_link_attr=>'title="Оплатить онлайн"'
+,p_derived_column=>'Y'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_page_button(
+ p_id=>wwv_flow_api.id(26915570181133793)
+,p_button_sequence=>10
+,p_button_plug_id=>wwv_flow_api.id(122110900984622137)
+,p_button_name=>'AddAccount'
+,p_button_action=>'REDIRECT_PAGE'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_api.id(11855494343552396)
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Добавить помещение'
+,p_button_position=>'REGION_TEMPLATE_CLOSE'
+,p_button_redirect_url=>'f?p=&APP_ID.:16:&SESSION.::&DEBUG.:RP::'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(26915901646133803)
+,p_name=>'P15_ACCOUNT_NUM'
+,p_item_sequence=>10
+,p_item_plug_id=>wwv_flow_api.id(122110900984622137)
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(26916338685133807)
+,p_name=>'P15_ACCOUNT_ID'
+,p_item_sequence=>20
+,p_item_plug_id=>wwv_flow_api.id(122110900984622137)
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(26916719685133807)
+,p_name=>'P15_HOUSE_ID'
+,p_item_sequence=>30
+,p_item_plug_id=>wwv_flow_api.id(122110900984622137)
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(26934031312133862)
+,p_name=>'DelAccount closed'
+,p_event_sequence=>10
+,p_triggering_element_type=>'REGION'
+,p_triggering_region_id=>wwv_flow_api.id(122110900984622137)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'apexafterclosedialog'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(26934568826133862)
+,p_event_id=>wwv_flow_api.id(26934031312133862)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_api.id(122110900984622137)
+,p_stop_execution_on_error=>'Y'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(26933199831133857)
+,p_name=>'AddAccount closed'
+,p_event_sequence=>20
+,p_triggering_element_type=>'BUTTON'
+,p_triggering_button_id=>wwv_flow_api.id(26915570181133793)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'apexafterclosedialog'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(26933648231133860)
+,p_event_id=>wwv_flow_api.id(26933199831133857)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_api.id(122110900984622137)
+,p_stop_execution_on_error=>'Y'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(26935368977172803)
+,p_name=>'KvitDownload'
+,p_event_sequence=>30
+,p_triggering_element_type=>'JQUERY_SELECTOR'
+,p_triggering_element=>'.kvit'
+,p_bind_type=>'bind'
+,p_bind_event_type=>'click'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(26938029989172830)
+,p_event_id=>wwv_flow_api.id(26935368977172803)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_JAVASCRIPT_CODE'
+,p_attribute_01=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'apex.server.process("GET_KVIT", ',
+'    {',
+'        x01: this.triggeringElement.id',
+'    }, { ',
+'        dataType: ''text'',',
+'        success: function(result) {',
+'            if (result !== ''null'') {',
+'                apex.navigation.openInNewWindow(''#IMAGE_PREFIX#pdf/''+result+''.pdf'',"_blank");',
+'            }',
+'        },',
+'        loadingIndicatorPosition: "page"',
+'    }',
+');',
+''))
+);
+wwv_flow_api.create_page_process(
+ p_id=>wwv_flow_api.id(26937936113172829)
+,p_process_sequence=>10
+,p_process_point=>'ON_DEMAND'
+,p_process_type=>'NATIVE_PLSQL'
+,p_process_name=>'GET_KVIT'
+,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'BEGIN',
+'    IF APEX_APPLICATION.G_X01 IS NOT NULL THEN',
+'        P_LK_KVIT.make_kvit(APEX_APPLICATION.G_X01);',
+'        HTP.PRN(APEX_APPLICATION.G_X01);',
+'    ELSE',
+'        HTP.PRN(''null'');',
+'    END IF;',
+'END;'))
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+);
+end;
+/
 prompt --application/pages/page_00016
 begin
 wwv_flow_api.create_page(
@@ -14626,6 +16358,843 @@ wwv_flow_api.create_page_process(
 ,p_process_type=>'NATIVE_CLOSE_WINDOW'
 ,p_process_name=>'Close Dialog'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+);
+end;
+/
+prompt --application/pages/page_00017
+begin
+wwv_flow_api.create_page(
+ p_id=>17
+,p_user_interface_id=>wwv_flow_api.id(11866208218552473)
+,p_name=>'MyAccHome5'
+,p_page_mode=>'NORMAL'
+,p_step_title=>'MyAccHome5'
+,p_step_sub_title=>'MyAccHome5'
+,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
+,p_first_item=>'NO_FIRST_ITEM'
+,p_autocomplete_on_off=>'OFF'
+,p_group_id=>wwv_flow_api.id(14539594654014623)
+,p_step_template=>wwv_flow_api.id(12101358466597064)
+,p_page_template_options=>'#DEFAULT#'
+,p_overwrite_navigation_list=>'N'
+,p_page_is_public_y_n=>'N'
+,p_cache_mode=>'NOCACHE'
+,p_last_updated_by=>'GERA'
+,p_last_upd_yyyymmddhh24miss=>'20181108233442'
+);
+wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(108301229999180808)
+,p_name=>'Баланс по счету'
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>20
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_display_point=>'BODY'
+,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'select ',
+'    :P17_ACCOUNT_NUM P17_ACCOUNT_NUM,',
+'    TO_DATE(PERIOD,''mm.yyyy'') PERIOD,',
+'    CHARGE_SUM_MN,',
+'    PAY_SUM_MN,',
+'    CHARGE_SUM_TOTAL,',
+'    PAY_SUM_TOTAL,',
+'    -1*DOLG_SUM_TOTAL BALANCE,',
+'    CASE WHEN -1*DOLG_SUM_TOTAL < 0 THEN ''RED'' ELSE ''GREEN'' END BAlCOLOR',
+'from ',
+'    V_TOTAL_ACCOUNT ',
+'where ',
+'    (CHARGE_SUM_MN <> 0 or PAY_SUM_MN <> 0)',
+'    and account_id = :P17_ACCOUNT_ID ',
+''))
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_query_row_template=>wwv_flow_api.id(11842624439552356)
+,p_query_num_rows=>1000
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_show_nulls_as=>'-'
+,p_query_no_data_found=>'Данные временно недоступны'
+,p_csv_output=>'Y'
+,p_csv_output_link_text=>'Сохранить в CSV файл'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_exp_filename=>'account_balance.csv'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26938127157172831)
+,p_query_column_id=>1
+,p_column_alias=>'P17_ACCOUNT_NUM'
+,p_column_display_sequence=>1
+,p_column_heading=>'P17 account num'
+,p_use_as_row_header=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26997145150889015)
+,p_query_column_id=>2
+,p_column_alias=>'PERIOD'
+,p_column_display_sequence=>2
+,p_column_heading=>'Период'
+,p_use_as_row_header=>'N'
+,p_column_format=>'MM.YYYY'
+,p_column_alignment=>'CENTER'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26994792480889009)
+,p_query_column_id=>3
+,p_column_alias=>'CHARGE_SUM_MN'
+,p_column_display_sequence=>3
+,p_column_heading=>'Начислено за период'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26995134914889009)
+,p_query_column_id=>4
+,p_column_alias=>'PAY_SUM_MN'
+,p_column_display_sequence=>4
+,p_column_heading=>'Оплачено за период'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26995518259889010)
+,p_query_column_id=>5
+,p_column_alias=>'CHARGE_SUM_TOTAL'
+,p_column_display_sequence=>5
+,p_column_heading=>'Начислено за все время'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26995907470889012)
+,p_query_column_id=>6
+,p_column_alias=>'PAY_SUM_TOTAL'
+,p_column_display_sequence=>6
+,p_column_heading=>'Оплачено за все время'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26996349277889014)
+,p_query_column_id=>7
+,p_column_alias=>'BALANCE'
+,p_column_display_sequence=>7
+,p_column_heading=>'Баланс счета на конец периода'
+,p_use_as_row_header=>'N'
+,p_column_html_expression=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'<span style="color:#BALCOLOR#">#BALANCE#</span>',
+''))
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26996753128889014)
+,p_query_column_id=>8
+,p_column_alias=>'BALCOLOR'
+,p_column_display_sequence=>8
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(122187995569377280)
+,p_name=>'Мои помещения'
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'Y'
+,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_display_point=>'BODY'
+,p_source=>'select ID, ACCOUNT_ID, ADDR, AREA_VAL, ACCOUNT_NUM, HOUSE_ID from LK_USER_ACCOUNTS where user_id = (select LK_AUTH.GET_USERID_BY_EMAIL(:APP_USER) from dual)'
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_ajax_items_to_submit=>'P17_ACCOUNT_ID'
+,p_query_row_template=>wwv_flow_api.id(11842624439552356)
+,p_query_num_rows=>100
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_show_nulls_as=>'-'
+,p_csv_output=>'N'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26991475112888973)
+,p_query_column_id=>1
+,p_column_alias=>'ID'
+,p_column_display_sequence=>6
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26989484876888964)
+,p_query_column_id=>2
+,p_column_alias=>'ACCOUNT_ID'
+,p_column_display_sequence=>5
+,p_column_link=>'javascript:void(0);'
+,p_column_linktext=>'<span aria-hidden="true" class="fa fa-tabs fa-lg"></span>'
+,p_column_link_attr=>'class="accinfo" id="#ACCOUNT_ID#" title="Подробная информация по счету"'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26990650644888971)
+,p_query_column_id=>3
+,p_column_alias=>'ADDR'
+,p_column_display_sequence=>2
+,p_column_heading=>'Адрес помещения'
+,p_use_as_row_header=>'N'
+,p_column_css_style=>'font-size:130%'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26989836602888970)
+,p_query_column_id=>4
+,p_column_alias=>'AREA_VAL'
+,p_column_display_sequence=>3
+,p_column_heading=>'Площадь'
+,p_use_as_row_header=>'N'
+,p_column_css_style=>'font-size:130%'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26990295080888970)
+,p_query_column_id=>5
+,p_column_alias=>'ACCOUNT_NUM'
+,p_column_display_sequence=>4
+,p_column_heading=>'Номер счета'
+,p_use_as_row_header=>'N'
+,p_column_css_style=>'font-size:130%'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26992276701888975)
+,p_query_column_id=>6
+,p_column_alias=>'HOUSE_ID'
+,p_column_display_sequence=>7
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(26991077956888971)
+,p_query_column_id=>7
+,p_column_alias=>'DERIVED$01'
+,p_column_display_sequence=>1
+,p_column_link=>'f?p=&APP_ID.:33:&SESSION.::&DEBUG.:RP:P33_ID:#ID#'
+,p_column_linktext=>' <span aria-hidden="true" class="t-Icon fa fa-trash-o"></span>'
+,p_column_link_attr=>'class="t-Button t-Button--noLabel t-Button--icon t-Button--danger t-Button--link" title="Удалить помещение"'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'Y'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_page_button(
+ p_id=>wwv_flow_api.id(26992644574888978)
+,p_button_sequence=>10
+,p_button_plug_id=>wwv_flow_api.id(122187995569377280)
+,p_button_name=>'AddAccount'
+,p_button_action=>'REDIRECT_PAGE'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_api.id(11855494343552396)
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Добавить помещение'
+,p_button_position=>'REGION_TEMPLATE_CLOSE'
+,p_button_redirect_url=>'f?p=&APP_ID.:16:&SESSION.::&DEBUG.:RP::'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(26993091297888990)
+,p_name=>'P17_ACCOUNT_NUM'
+,p_item_sequence=>10
+,p_item_plug_id=>wwv_flow_api.id(122187995569377280)
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(26993360204889000)
+,p_name=>'P17_ACCOUNT_ID'
+,p_item_sequence=>20
+,p_item_plug_id=>wwv_flow_api.id(122187995569377280)
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(26993701828889001)
+,p_name=>'P17_HOUSE_ID'
+,p_item_sequence=>30
+,p_item_plug_id=>wwv_flow_api.id(122187995569377280)
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(27011099946889081)
+,p_name=>'DelAccount closed'
+,p_event_sequence=>10
+,p_triggering_element_type=>'REGION'
+,p_triggering_region_id=>wwv_flow_api.id(122187995569377280)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'apexafterclosedialog'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(27011528360889082)
+,p_event_id=>wwv_flow_api.id(27011099946889081)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_api.id(122187995569377280)
+,p_stop_execution_on_error=>'Y'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(27010147077889073)
+,p_name=>'AddAccount closed'
+,p_event_sequence=>20
+,p_triggering_element_type=>'BUTTON'
+,p_triggering_button_id=>wwv_flow_api.id(26992644574888978)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'apexafterclosedialog'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(27010621816889079)
+,p_event_id=>wwv_flow_api.id(27010147077889073)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_api.id(122187995569377280)
+,p_stop_execution_on_error=>'Y'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(26938327957172833)
+,p_name=>'AccInfo'
+,p_event_sequence=>30
+,p_triggering_element_type=>'JQUERY_SELECTOR'
+,p_triggering_element=>'.accinfo'
+,p_bind_type=>'bind'
+,p_bind_event_type=>'click'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(26938406408172834)
+,p_event_id=>wwv_flow_api.id(26938327957172833)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_JAVASCRIPT_CODE'
+,p_attribute_01=>'apex.item(''P17_ACCOUNT_ID'').setValue(this.triggeringElement.id);'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(26939501725172845)
+,p_event_id=>wwv_flow_api.id(26938327957172833)
+,p_event_result=>'TRUE'
+,p_action_sequence=>20
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_EXECUTE_PLSQL_CODE'
+,p_attribute_01=>'null;'
+,p_attribute_02=>'P17_ACCOUNT_ID,P17_ACCOUNT_NUM,P17_HOUSE_ID'
+,p_stop_execution_on_error=>'Y'
+,p_wait_for_result=>'Y'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(26939608524172846)
+,p_event_id=>wwv_flow_api.id(26938327957172833)
+,p_event_result=>'TRUE'
+,p_action_sequence=>30
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_api.id(108301229999180808)
+);
+end;
+/
+prompt --application/pages/page_00019
+begin
+wwv_flow_api.create_page(
+ p_id=>19
+,p_user_interface_id=>wwv_flow_api.id(11866208218552473)
+,p_name=>'MyAccHome6'
+,p_page_mode=>'NORMAL'
+,p_step_title=>'MyAccHome6'
+,p_step_sub_title=>'MyAccHome6'
+,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
+,p_first_item=>'NO_FIRST_ITEM'
+,p_autocomplete_on_off=>'OFF'
+,p_group_id=>wwv_flow_api.id(12122140227731315)
+,p_step_template=>wwv_flow_api.id(12101358466597064)
+,p_page_template_options=>'#DEFAULT#'
+,p_overwrite_navigation_list=>'N'
+,p_page_is_public_y_n=>'N'
+,p_cache_mode=>'NOCACHE'
+,p_last_updated_by=>'GERA'
+,p_last_upd_yyyymmddhh24miss=>'20181108235419'
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(79619713049105792)
+,p_plug_name=>'Tabs'
+,p_region_template_options=>'#DEFAULT#:t-TabsRegion-mod--simple'
+,p_plug_template=>wwv_flow_api.id(11835879897552339)
+,p_plug_display_sequence=>40
+,p_include_in_reg_disp_sel_yn=>'Y'
+,p_plug_display_point=>'BODY'
+,p_plug_query_row_template=>1
+,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_attribute_01=>'N'
+,p_attribute_02=>'HTML'
+);
+wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(108350341209493658)
+,p_name=>'Баланс по счету'
+,p_parent_plug_id=>wwv_flow_api.id(79619713049105792)
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_display_point=>'BODY'
+,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'select ',
+'    TO_DATE(PERIOD,''mm.yyyy'') PERIOD,',
+'    CHARGE_SUM_MN,',
+'    PAY_SUM_MN,',
+'    CHARGE_SUM_TOTAL,',
+'    PAY_SUM_TOTAL,',
+'    -1*DOLG_SUM_TOTAL BALANCE,',
+'    CASE WHEN -1*DOLG_SUM_TOTAL < 0 THEN ''RED'' ELSE ''GREEN'' END BAlCOLOR',
+'from ',
+'    V_TOTAL_ACCOUNT ',
+'where ',
+'    (CHARGE_SUM_MN <> 0 or PAY_SUM_MN <> 0)',
+'    and account_id = :P19_ACCOUNT_ID ',
+''))
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_query_row_template=>wwv_flow_api.id(11842624439552356)
+,p_query_num_rows=>1000
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_show_nulls_as=>'-'
+,p_query_no_data_found=>'Данные временно недоступны'
+,p_csv_output=>'Y'
+,p_csv_output_link_text=>'Сохранить в CSV файл'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_exp_filename=>'account_balance.csv'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27046213917201785)
+,p_query_column_id=>1
+,p_column_alias=>'PERIOD'
+,p_column_display_sequence=>1
+,p_column_heading=>'Период'
+,p_use_as_row_header=>'N'
+,p_column_format=>'MM.YYYY'
+,p_column_alignment=>'CENTER'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27043866904201779)
+,p_query_column_id=>2
+,p_column_alias=>'CHARGE_SUM_MN'
+,p_column_display_sequence=>2
+,p_column_heading=>'Начислено за период'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27044200942201781)
+,p_query_column_id=>3
+,p_column_alias=>'PAY_SUM_MN'
+,p_column_display_sequence=>3
+,p_column_heading=>'Оплачено за период'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27044659202201781)
+,p_query_column_id=>4
+,p_column_alias=>'CHARGE_SUM_TOTAL'
+,p_column_display_sequence=>4
+,p_column_heading=>'Начислено за все время'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27045011672201782)
+,p_query_column_id=>5
+,p_column_alias=>'PAY_SUM_TOTAL'
+,p_column_display_sequence=>5
+,p_column_heading=>'Оплачено за все время'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27045419252201782)
+,p_query_column_id=>6
+,p_column_alias=>'BALANCE'
+,p_column_display_sequence=>6
+,p_column_heading=>'Баланс счета на конец периода'
+,p_use_as_row_header=>'N'
+,p_column_html_expression=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'<span style="color:#BALCOLOR#">#BALANCE#</span>',
+''))
+,p_column_alignment=>'RIGHT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27045893567201784)
+,p_query_column_id=>7
+,p_column_alias=>'BALCOLOR'
+,p_column_display_sequence=>7
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(131449005049174803)
+,p_name=>'Мои платежи по счету'
+,p_parent_plug_id=>wwv_flow_api.id(79619713049105792)
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>20
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_display_point=>'BODY'
+,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'select V.* from V_ACC_PAY V where ACC_ID = :P19_ACCOUNT_ID ',
+''))
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_query_row_template=>wwv_flow_api.id(11842624439552356)
+,p_query_num_rows=>1000
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_show_nulls_as=>'-'
+,p_query_no_data_found=>'Данные временно недоступны'
+,p_csv_output=>'Y'
+,p_csv_output_link_text=>'Сохранить в CSV файл'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_exp_filename=>'account_payments.csv'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27049360355201792)
+,p_query_column_id=>1
+,p_column_alias=>'ACC_ID'
+,p_column_display_sequence=>1
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27047340770201789)
+,p_query_column_id=>2
+,p_column_alias=>'PAY_DATE'
+,p_column_display_sequence=>2
+,p_column_heading=>'Дата'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27047707398201789)
+,p_query_column_id=>3
+,p_column_alias=>'PAY_SUM'
+,p_column_display_sequence=>3
+,p_column_heading=>'Сумма'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27048127896201790)
+,p_query_column_id=>4
+,p_column_alias=>'PAY_ACC'
+,p_column_display_sequence=>4
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27048567682201790)
+,p_query_column_id=>5
+,p_column_alias=>'PAY_PERIOD'
+,p_column_display_sequence=>5
+,p_column_heading=>'Период'
+,p_use_as_row_header=>'N'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27048949735201792)
+,p_query_column_id=>6
+,p_column_alias=>'PAY_AGENT'
+,p_column_display_sequence=>6
+,p_column_heading=>'Платежный агент'
+,p_use_as_row_header=>'N'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_region(
+ p_id=>wwv_flow_api.id(122237106779690130)
+,p_name=>'Мои помещения'
+,p_template=>wwv_flow_api.id(11832695845552332)
+,p_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'Y'
+,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
+,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_display_point=>'BODY'
+,p_source=>'select ID, ACCOUNT_ID, ADDR, AREA_VAL, ACCOUNT_NUM, HOUSE_ID from LK_USER_ACCOUNTS where user_id = (select LK_AUTH.GET_USERID_BY_EMAIL(:APP_USER) from dual)'
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_ajax_enabled=>'Y'
+,p_query_row_template=>wwv_flow_api.id(11842624439552356)
+,p_query_num_rows=>100
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_show_nulls_as=>'-'
+,p_csv_output=>'N'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27040568431201767)
+,p_query_column_id=>1
+,p_column_alias=>'ID'
+,p_column_display_sequence=>6
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27038561588201762)
+,p_query_column_id=>2
+,p_column_alias=>'ACCOUNT_ID'
+,p_column_display_sequence=>5
+,p_column_link=>'javascript:void(0);'
+,p_column_linktext=>'<span aria-hidden="true" class="fa fa-tabs fa-lg"></span>'
+,p_column_link_attr=>'id="#ACCOUNT_ID#" class="accinfo"'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27039765307201765)
+,p_query_column_id=>3
+,p_column_alias=>'ADDR'
+,p_column_display_sequence=>2
+,p_column_heading=>'Адрес помещения'
+,p_use_as_row_header=>'N'
+,p_column_css_style=>'font-size:130%'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27038917137201764)
+,p_query_column_id=>4
+,p_column_alias=>'AREA_VAL'
+,p_column_display_sequence=>3
+,p_column_heading=>'Площадь'
+,p_use_as_row_header=>'N'
+,p_column_css_style=>'font-size:130%'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27039305287201764)
+,p_query_column_id=>5
+,p_column_alias=>'ACCOUNT_NUM'
+,p_column_display_sequence=>4
+,p_column_heading=>'Номер счета'
+,p_use_as_row_header=>'N'
+,p_column_css_style=>'font-size:130%'
+,p_column_alignment=>'RIGHT'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27041382883201768)
+,p_query_column_id=>6
+,p_column_alias=>'HOUSE_ID'
+,p_column_display_sequence=>7
+,p_hidden_column=>'Y'
+,p_derived_column=>'N'
+);
+wwv_flow_api.create_report_columns(
+ p_id=>wwv_flow_api.id(27040126457201765)
+,p_query_column_id=>7
+,p_column_alias=>'DERIVED$01'
+,p_column_display_sequence=>1
+,p_column_link=>'f?p=&APP_ID.:33:&SESSION.::&DEBUG.:RP:P33_ID:#ID#'
+,p_column_linktext=>' <span aria-hidden="true" class="t-Icon fa fa-trash-o"></span>'
+,p_column_link_attr=>'class="t-Button t-Button--noLabel t-Button--icon t-Button--danger t-Button--link" title="Удалить помещение"'
+,p_disable_sort_column=>'N'
+,p_derived_column=>'Y'
+,p_include_in_export=>'Y'
+);
+wwv_flow_api.create_page_button(
+ p_id=>wwv_flow_api.id(27041759933201770)
+,p_button_sequence=>10
+,p_button_plug_id=>wwv_flow_api.id(122237106779690130)
+,p_button_name=>'AddAccount'
+,p_button_action=>'REDIRECT_PAGE'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_api.id(11855494343552396)
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Добавить помещение'
+,p_button_position=>'REGION_TEMPLATE_CLOSE'
+,p_button_redirect_url=>'f?p=&APP_ID.:16:&SESSION.::&DEBUG.:RP::'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(27042124222201771)
+,p_name=>'P19_ACCOUNT_NUM'
+,p_item_sequence=>10
+,p_item_plug_id=>wwv_flow_api.id(122237106779690130)
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(27042504720201775)
+,p_name=>'P19_ACCOUNT_ID'
+,p_item_sequence=>20
+,p_item_plug_id=>wwv_flow_api.id(122237106779690130)
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(27042912829201776)
+,p_name=>'P19_HOUSE_ID'
+,p_item_sequence=>30
+,p_item_plug_id=>wwv_flow_api.id(122237106779690130)
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(27060170005201817)
+,p_name=>'DelAccount closed'
+,p_event_sequence=>10
+,p_triggering_element_type=>'REGION'
+,p_triggering_region_id=>wwv_flow_api.id(122237106779690130)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'apexafterclosedialog'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(27060637296201818)
+,p_event_id=>wwv_flow_api.id(27060170005201817)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_api.id(122237106779690130)
+,p_stop_execution_on_error=>'Y'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(27059217599201815)
+,p_name=>'AddAccount closed'
+,p_event_sequence=>20
+,p_triggering_element_type=>'BUTTON'
+,p_triggering_button_id=>wwv_flow_api.id(27041759933201770)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'apexafterclosedialog'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(27059743213201817)
+,p_event_id=>wwv_flow_api.id(27059217599201815)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_api.id(122237106779690130)
+,p_stop_execution_on_error=>'Y'
+);
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(26939783223172847)
+,p_name=>'SetAccID'
+,p_event_sequence=>30
+,p_triggering_element_type=>'JQUERY_SELECTOR'
+,p_triggering_element=>'.accinfo'
+,p_bind_type=>'bind'
+,p_bind_event_type=>'click'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(26939826130172848)
+,p_event_id=>wwv_flow_api.id(26939783223172847)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_JAVASCRIPT_CODE'
+,p_attribute_01=>'apex.item(''P19_ACCOUNT_ID'').setValue(this.triggeringElement.id);'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(26939962062172849)
+,p_event_id=>wwv_flow_api.id(26939783223172847)
+,p_event_result=>'TRUE'
+,p_action_sequence=>20
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_EXECUTE_PLSQL_CODE'
+,p_attribute_01=>'null;'
+,p_attribute_02=>'P19_ACCOUNT_ID'
+,p_stop_execution_on_error=>'Y'
+,p_wait_for_result=>'Y'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(27075766194249301)
+,p_event_id=>wwv_flow_api.id(26939783223172847)
+,p_event_result=>'TRUE'
+,p_action_sequence=>40
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_api.id(108350341209493658)
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(27075830108249302)
+,p_event_id=>wwv_flow_api.id(26939783223172847)
+,p_event_result=>'TRUE'
+,p_action_sequence=>50
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_api.id(131449005049174803)
 );
 end;
 /
