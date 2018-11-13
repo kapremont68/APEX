@@ -27,7 +27,7 @@ prompt APPLICATION 103 - LK
 -- Application Export:
 --   Application:     103
 --   Name:            LK
---   Date and Time:   12:50 Tuesday November 13, 2018
+--   Date and Time:   16:37 Tuesday November 13, 2018
 --   Exported By:     GERA
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -116,7 +116,7 @@ wwv_flow_api.create_flow(
 ,p_auto_time_zone=>'N'
 ,p_default_error_display_loc=>'INLINE_WITH_FIELD'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20181113124259'
+,p_last_upd_yyyymmddhh24miss=>'20181113163444'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>3
 ,p_ui_type_name => null
@@ -11680,7 +11680,7 @@ wwv_flow_api.create_page(
 ,p_step_template=>wwv_flow_api.id(12101358466597064)
 ,p_page_template_options=>'#DEFAULT#'
 ,p_last_updated_by=>'GERA'
-,p_last_upd_yyyymmddhh24miss=>'20181113124117'
+,p_last_upd_yyyymmddhh24miss=>'20181113163444'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(52581889269904046)
@@ -12211,7 +12211,7 @@ wwv_flow_api.create_report_columns(
 );
 wwv_flow_api.create_report_region(
  p_id=>wwv_flow_api.id(104411181269973057)
-,p_name=>unistr('\0418\0441\0442\043E\0440\0438\044F \0441\0447\0435\0442\043E\0432 \0423\041A')
+,p_name=>unistr('\0418\0441\0442\043E\0440\0438\044F \0441\043C\0435\043D\044B \0441\0447\0435\0442\043E\0432 \0423\041A')
 ,p_parent_plug_id=>wwv_flow_api.id(52581889269904046)
 ,p_template=>wwv_flow_api.id(11832695845552332)
 ,p_display_sequence=>40
@@ -12231,7 +12231,7 @@ wwv_flow_api.create_report_region(
 '          left join FCR.V#ERC_ACC_UK_NAMES@dbl_fcr1 uk on (ao.C#OUT_NUM = uk.ACCAUNT_NUM)',
 '        WHERE',
 '          1 = 1',
-'          AND ao.c#account_id = :P8_ACCOUNT_ID',
+'          AND ao.c#account_id = :P1_ACCOUNT_ID',
 '        ',
 ''))
 ,p_ajax_enabled=>'Y'
